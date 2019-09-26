@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 6506268659781365614}
   - component: {fileID: 4920717032803179733}
   - component: {fileID: 8211082006145692635}
+  - component: {fileID: 560887292720036151}
   m_Layer: 0
   m_Name: Baron
-  m_TagString: Untagged
+  m_TagString: Deck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2677054905659560380}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.8540914, y: -2.3438423, z: 0}
+  m_LocalPosition: {x: -1.0500004, y: 0, z: -1.5000002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -97,3 +98,29 @@ MonoBehaviour:
   count: 2
   front: {fileID: 21300000, guid: af3e170eb4e7a4fdcb6313e37edd7451, type: 3}
   back: {fileID: 21300000, guid: 97d293dcbbd3943448cb644235253ae5, type: 3}
+--- !u!61 &560887292720036151
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2677054905659560380}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.32, y: 3.11}
+    newSize: {x: 2.25, y: 3.12}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 2.25, y: 3.12}
+  m_EdgeRadius: 0

@@ -8,6 +8,10 @@ public class Deck : MonoBehaviour
 
     [SerializeField] List<Card> deck;
 
+    Card[] visibleDeck;
+
+    int cardsDealt = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,20 +51,22 @@ public class Deck : MonoBehaviour
         foreach (Card card in deck)
         {
             card.GetComponent<SpriteRenderer>().sprite = card.GetBackImage();
+            card.gameObject.tag = "Deck";
             Instantiate(card, new Vector3(position, 0, -counter), Quaternion.identity);
             counter += 0.1f;
             position += 0.03f;
         }
+        visibleDeck = FindObjectsOfType<Card>();
     }
 
     public void DealCard(Player player)
     {
         Card lastCard = deck[deck.Count-1];
-        player.AddCard(lastCard);
-        Card card = FindObjectOfType<Card>();
-        Debug.Log(card);
+        Card card = visibleDeck[cardsDealt];
         Destroy(card.gameObject);
+        player.AddCard(lastCard);
         deck.RemoveAt(deck.Count-1);
+        cardsDealt++;
 
     }
 

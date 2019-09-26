@@ -7,6 +7,7 @@ public class Card : MonoBehaviour
     public int value;
     public int count;
 
+    GameSession gameSession;
 
     [SerializeField] Sprite front;
 
@@ -14,7 +15,7 @@ public class Card : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        gameSession = FindObjectOfType<GameSession>();
     }
 
     public void DestroyCard()
@@ -30,6 +31,19 @@ public class Card : MonoBehaviour
     public Sprite GetFrontImage()
     {
         return this.front;
+    }
+
+    void OnMouseDown()
+    {
+        if (gameObject.tag == "Deck")
+        {
+            gameSession.DealCard();
+        }
+        else if (gameObject.tag != "Deck")
+        {
+            gameSession.PlayCard(this);
+            gameSession.MoveCardToDiscard(this);
+        }
     }
 
     // Update is called once per frame

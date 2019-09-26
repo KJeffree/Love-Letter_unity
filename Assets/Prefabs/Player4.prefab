@@ -45,4 +45,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentCards: []
   active: 0
+  xPos1: 7
+  yPos1: 2
+  xPos2: 7
+  yPos2: 3
+  discardCardPile: {fileID: 3025464453927738168, guid: c09d44f075b6346d5a62f658a0aaa36b,
+    type: 3}
+  cardRotation: 90
   playerNumber: 4
