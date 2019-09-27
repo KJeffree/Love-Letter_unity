@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public float yPos2;
 
     public GameObject discardCardPile;
+
     public int cardRotation;
 
     int points;
@@ -22,13 +23,18 @@ public class Player : MonoBehaviour
     public int playerNumber;
 
 
-    List<Card> playedCards;
+    public List<Card> playedCards = new List<Card>();
 
     public bool invincible = false;
     // Start is called before the first frame update
     void Start()
     {
         
+    }
+
+    public int GetNumber()
+    {
+        return playerNumber;
     }
 
     // public Player WaitForPlayerChoice()
@@ -76,6 +82,11 @@ public class Player : MonoBehaviour
         return discardCardPile;
     }
 
+    public Card GetCurrentCard()
+    {
+        return currentCards[0];
+    }
+
     public int GetCurrentCardsNumber()
     {
         return currentCards.Count;
@@ -88,28 +99,45 @@ public class Player : MonoBehaviour
 
     public void RemoveCard(Card card)
     {
-        foreach(Card currentCard in currentCards)
-        {
-            if (currentCard.GetValue() == card.GetValue())
-            {
-                currentCards.Remove(currentCard);
-                return;
-            }
-        }
+        // foreach(Card currentCard in currentCards)
+        // {
+        //     if (currentCard.GetValue() == card.GetValue())
+        //     {
+        //         currentCards.Remove(currentCard);
+        //         return;
+        //     }
+        // }
+        currentCards.Remove(card);
+    }
+
+    public void AddToPlayedCards(Card card)
+    {
+        playedCards.Add(card);
+    }
+
+    public int GetPlayedCardsNumber()
+    {
+        return playedCards.Count;
     }
 
     public void AddCard(Card card)
     {
-        currentCards.Add(card);
         card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
         card.gameObject.tag = card.gameObject.transform.name;
-        if (currentCards.Count == 1)
+        if (currentCards.Count == 0)
         {
-            Instantiate(card, new Vector3(xPos1, yPos1, transform.position.z), Quaternion.Euler(0, 0, cardRotation));
+            currentCards.Add(Instantiate(card, new Vector3(xPos1, yPos1, transform.position.z), Quaternion.Euler(0, 0, cardRotation)));
         } else
         {
-            Instantiate(card, new Vector3(xPos2, yPos2, transform.position.z - 1), Quaternion.Euler(0, 0, cardRotation));
-
+            currentCards.Add(Instantiate(card, new Vector3(xPos2, yPos2, transform.position.z - 1), Quaternion.Euler(0, 0, cardRotation)));
+        }
+    }
+    
+    public void PositionSingleCard()
+    {
+        if (currentCards.Count > 0)
+        {
+            currentCards[0].transform.position = new Vector3(xPos1, yPos1, transform.position.z);
         }
     }
 

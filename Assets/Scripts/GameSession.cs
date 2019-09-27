@@ -69,16 +69,23 @@ public class GameSession : MonoBehaviour
     }
 
     public void BaronTargetChosen(Player player)
-    {        
+    {
+        // Debug.Log(player.GetCurrentCard());
+        Debug.Log(player.GetCurrentCardValue());
+        Debug.Log(currentPlayer.GetCurrentCardValue());
+
         if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
         {
             MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
+            Debug.Log("target higher value");
             currentPlayer.SetActive(false);
         } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
         {
+            Debug.Log("player higher value");
             MoveCardToDiscard(player.currentCards[0], player);
             player.SetActive(false);
         } else {
+            Debug.Log("Both equal");
             return;
         }
     }
@@ -166,9 +173,33 @@ public class GameSession : MonoBehaviour
     public void MoveCardToDiscard(Card card, Player player)
     {
         player.RemoveCard(card);
-        Vector3 discardPosition = player.GetDiscardPile().transform.position;
+        Debug.Log(player);
+        player.AddToPlayedCards(card);
+        Vector3 discardPile = player.GetDiscardPile().transform.position;
+        Vector3 discardPosition = new Vector3(0, 0, 0);
+        if (player.GetPlayedCardsNumber() > 1)
+        {
+            if (player.GetNumber() == 1)
+            {
+                discardPosition = new Vector3(discardPile.x + (player.GetPlayedCardsNumber() - 1), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));
+            } else if (player.GetNumber() == 2)
+            {
+                discardPosition = new Vector3(discardPile.x, discardPile.y - (player.GetPlayedCardsNumber() - 1), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+            } else if (player.GetNumber() == 3)
+            {
+                discardPosition = new Vector3(discardPile.x - (player.GetPlayedCardsNumber() - 1), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+            } else if (player.GetNumber() == 4)
+            {
+                discardPosition = new Vector3(discardPile.x, discardPile.y + (player.GetPlayedCardsNumber() - 1), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+            }
+        } else {
+            discardPosition = player.GetDiscardPile().transform.position;
+        }
         card.transform.position = discardPosition;
-        ChangeCurrentPlayer();
+
+        player.PositionSingleCard();
+
+        // ChangeCurrentPlayer();
     }
 
     public void DealCard()
