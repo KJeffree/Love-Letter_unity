@@ -219,8 +219,6 @@ public class GameSession : MonoBehaviour
         card.transform.position = discardPosition;
 
         player.PositionSingleCard();
-
-        // ChangeCurrentPlayer();
     }
 
     public void DealCard()
