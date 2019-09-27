@@ -18,6 +18,11 @@ public class Card : MonoBehaviour
         gameSession = FindObjectOfType<GameSession>();
     }
 
+    public int GetValue()
+    {
+        return value;
+    }
+
     public void DestroyCard()
     {
         Destroy(gameObject);
@@ -42,7 +47,6 @@ public class Card : MonoBehaviour
         else if (gameObject.tag != "Deck")
         {
             gameSession.PlayCard(this);
-            gameSession.MoveCardToDiscard(this);
         }
     }
 

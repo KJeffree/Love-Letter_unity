@@ -31,39 +31,44 @@ public class Player : MonoBehaviour
         
     }
 
-    public Player WaitForPlayerChoice()
-    {
-        StartCoroutine(ChosenPlayer());
-        Debug.Log(this);
-        return this;
-    }
+    // public Player WaitForPlayerChoice()
+    // {
+    //     StartCoroutine(ChosenPlayer());
+    //     Debug.Log(this);
+    //     return this;
+    // }
 
-    private IEnumerator ChosenPlayer()
-    {
-        yield return new WaitForSeconds(1);
+    // private IEnumerator ChosenPlayer()
+    // {
+    //     yield return new WaitForSeconds(1);
 
-        yield return waitForKeyPress(KeyCode.Mouse0);
-    }
+    //     yield return waitForKeyPress(KeyCode.Mouse0);
+    // }
 
-    private IEnumerator waitForKeyPress(KeyCode key) {
-        bool done = false;
-        while (!done)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                done = true;
-                Debug.Log(Input.mousePosition);
-                yield return Input.mousePosition;
-                // Vector2 position = Input.mousePosition;
-            }
-            yield return null;
-        }
-    }
+    // private IEnumerator waitForKeyPress(KeyCode key) {
+    //     bool done = false;
+    //     while (!done)
+    //     {
+    //         if (Input.GetKeyDown(key))
+    //         {
+    //             done = true;
+    //             Debug.Log(Input.mousePosition);
+    //             // yield return Input.mousePosition;
+    //             // Vector2 position = Input.mousePosition;
+    //         }
+    //         yield return null;
+    //     }
+    // }
 
 
     public void SetInvincible(bool status)
     {
         invincible = status;
+    }
+
+    public void SetActive(bool status)
+    {
+        active = status;
     }
 
     public GameObject GetDiscardPile()
@@ -74,6 +79,23 @@ public class Player : MonoBehaviour
     public int GetCurrentCardsNumber()
     {
         return currentCards.Count;
+    }
+
+    public int GetCurrentCardValue()
+    {
+        return currentCards[0].GetValue();
+    }
+
+    public void RemoveCard(Card card)
+    {
+        foreach(Card currentCard in currentCards)
+        {
+            if (currentCard.GetValue() == card.GetValue())
+            {
+                currentCards.Remove(currentCard);
+                return;
+            }
+        }
     }
 
     public void AddCard(Card card)

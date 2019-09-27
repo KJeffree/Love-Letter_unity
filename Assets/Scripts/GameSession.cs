@@ -13,9 +13,26 @@ public class GameSession : MonoBehaviour
 
     Player currentPlayer;
 
+    [SerializeField] GameObject[] baronButtons;
+    [SerializeField] GameObject[] guardButtons;
+    [SerializeField] GameObject[] princeButtons;
+
+
     // Start is called before the first frame update
     void Start()
     {
+        foreach (GameObject button in baronButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in guardButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in princeButtons)
+        {
+            button.SetActive(false);
+        }
         deck = FindObjectOfType<Deck>();
 
         foreach (Player player in players)
@@ -43,83 +60,115 @@ public class GameSession : MonoBehaviour
         currentPlayer.SetInvincible(false);
     }
 
+    private void DisplayPlayerButtonsBaron()
+    {
+        foreach (GameObject button in baronButtons)
+        {
+            button.SetActive(true);
+        }
+    }
+
+    public void BaronTargetChosen(Player player)
+    {        
+        if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
+        {
+            MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
+            currentPlayer.SetActive(false);
+        } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
+        {
+            MoveCardToDiscard(player.currentCards[0], player);
+            player.SetActive(false);
+        } else {
+            return;
+        }
+    }
+
     public void PlayCard(Card card)
     {
         switch (card.tag)
         {
             case "Guard":
-                PlayGuard();
+                PlayGuard(card);
                 break;
             case "Priest":
-                PlayPriest();
+                PlayPriest(card);
                 break;
             case "Baron":
-                PlayBaron();
+                PlayBaron(card);
                 break;
             case "Handmaid":
-                PlayHandmaid();
+                PlayHandmaid(card);
                 break;
             case "Prince":
-                PlayPrince();
+                PlayPrince(card);
                 break;
             case "King":
-                PlayKing();
+                PlayKing(card);
                 break;
             case "Countess":
-                PlayCountess();
+                PlayCountess(card);
                 break;
             case "Princess":
-                PlayPrincess();
+                PlayPrincess(card);
                 break;
             default:
                 break;
         }
     }
 
-    public void PlayGuard()
+    public void PlayGuard(Card card)
     {
         Debug.Log("PlayingGuard");
+        MoveCardToDiscard(card, currentPlayer);
+
     }
-    public void PlayPriest()
+    public void PlayPriest(Card card)
     {
         Debug.Log("PlayingPriest");
-        
+        MoveCardToDiscard(card, currentPlayer);
+
     }
-    public void PlayBaron()
+    public void PlayBaron(Card card)
     {
-        currentPlayer.WaitForPlayerChoice();
-        Debug.Log("PlayingBaron");
+        // currentPlayer.WaitForPlayerChoice();
+        DisplayPlayerButtonsBaron();
+        MoveCardToDiscard(card, currentPlayer);
     }
-    public void PlayHandmaid()
+    public void PlayHandmaid(Card card)
     {
         currentPlayer.SetInvincible(true);
+        MoveCardToDiscard(card, currentPlayer);
         Debug.Log("PlayingHandmaid");
     }
-    public void PlayPrince()
+    public void PlayPrince(Card card)
     {
         Debug.Log("PlayingPrince");
-        
+        MoveCardToDiscard(card, currentPlayer);
     }
-    public void PlayKing()
+    public void PlayKing(Card card)
     {
         Debug.Log("PlayingKing");
-        
+        MoveCardToDiscard(card, currentPlayer);
+
     }
-    public void PlayCountess()
+    public void PlayCountess(Card card)
     {
         Debug.Log("PlayingCountess");
-        
+        MoveCardToDiscard(card, currentPlayer);        
     }
-    public void PlayPrincess()
+    public void PlayPrincess(Card card)
     {
-        Debug.Log("PlayingPrincess");        
+        Debug.Log("PlayingPrincess");   
+        MoveCardToDiscard(card, currentPlayer);
+     
     }
 
-    public void MoveCardToDiscard(Card card)
+    public void MoveCardToDiscard(Card card, Player player)
     {
-        Player player = players[currentPlayerNumber];
+        player.RemoveCard(card);
         Vector3 discardPosition = player.GetDiscardPile().transform.position;
         card.transform.position = discardPosition;
+        ChangeCurrentPlayer();
     }
 
     public void DealCard()
