@@ -16,6 +16,9 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] baronButtons;
     [SerializeField] GameObject[] guardButtons;
     [SerializeField] GameObject[] princeButtons;
+    [SerializeField] GameObject[] kingButtons;
+    [SerializeField] GameObject[] priestButtons;
+
 
 
     // Start is called before the first frame update
@@ -30,6 +33,14 @@ public class GameSession : MonoBehaviour
             button.SetActive(false);
         }
         foreach (GameObject button in princeButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in kingButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in priestButtons)
         {
             button.SetActive(false);
         }
