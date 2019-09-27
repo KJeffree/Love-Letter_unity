@@ -100,9 +100,6 @@ public class GameSession : MonoBehaviour
             Debug.Log("player higher value");
             MoveCardToDiscard(player.currentCards[0], player);
             player.SetActive(false);
-        } else {
-            Debug.Log("Both equal");
-            return;
         }
         ChangeCurrentPlayer();
         DisablePlayerButtons();
