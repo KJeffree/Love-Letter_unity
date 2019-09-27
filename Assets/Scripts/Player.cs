@@ -53,7 +53,7 @@ public class Player : MonoBehaviour
             {
                 done = true;
                 Debug.Log(Input.mousePosition);
-                yield return this;
+                yield return Input.mousePosition;
                 // Vector2 position = Input.mousePosition;
             }
             yield return null;
