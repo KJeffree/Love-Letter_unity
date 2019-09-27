@@ -88,6 +88,7 @@ public class GameSession : MonoBehaviour
             Debug.Log("Both equal");
             return;
         }
+        ChangeCurrentPlayer();
     }
 
     public void PlayCard(Card card)
@@ -127,13 +128,13 @@ public class GameSession : MonoBehaviour
     {
         Debug.Log("PlayingGuard");
         MoveCardToDiscard(card, currentPlayer);
-
+        ChangeCurrentPlayer();
     }
     public void PlayPriest(Card card)
     {
         Debug.Log("PlayingPriest");
         MoveCardToDiscard(card, currentPlayer);
-
+        ChangeCurrentPlayer();
     }
     public void PlayBaron(Card card)
     {
@@ -146,28 +147,31 @@ public class GameSession : MonoBehaviour
         currentPlayer.SetInvincible(true);
         MoveCardToDiscard(card, currentPlayer);
         Debug.Log("PlayingHandmaid");
+        ChangeCurrentPlayer();
     }
     public void PlayPrince(Card card)
     {
         Debug.Log("PlayingPrince");
         MoveCardToDiscard(card, currentPlayer);
+        ChangeCurrentPlayer();
     }
     public void PlayKing(Card card)
     {
         Debug.Log("PlayingKing");
         MoveCardToDiscard(card, currentPlayer);
-
+        ChangeCurrentPlayer();
     }
     public void PlayCountess(Card card)
     {
         Debug.Log("PlayingCountess");
-        MoveCardToDiscard(card, currentPlayer);        
+        MoveCardToDiscard(card, currentPlayer);
+        ChangeCurrentPlayer();
     }
     public void PlayPrincess(Card card)
     {
         Debug.Log("PlayingPrincess");   
         MoveCardToDiscard(card, currentPlayer);
-     
+        ChangeCurrentPlayer();
     }
 
     public void MoveCardToDiscard(Card card, Player player)
