@@ -87,8 +87,8 @@ public class GameSession : MonoBehaviour
     }
     public void PlayBaron()
     {
+        currentPlayer.WaitForPlayerChoice();
         Debug.Log("PlayingBaron");
-        
     }
     public void PlayHandmaid()
     {

@@ -31,6 +31,36 @@ public class Player : MonoBehaviour
         
     }
 
+    public Player WaitForPlayerChoice()
+    {
+        StartCoroutine(ChosenPlayer());
+        Debug.Log(this);
+        return this;
+    }
+
+    private IEnumerator ChosenPlayer()
+    {
+        yield return new WaitForSeconds(1);
+
+        yield return waitForKeyPress(KeyCode.Mouse0);
+    }
+
+    private IEnumerator waitForKeyPress(KeyCode key) {
+        bool done = false;
+        while (!done)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                done = true;
+                Debug.Log(Input.mousePosition);
+                yield return this;
+                // Vector2 position = Input.mousePosition;
+            }
+            yield return null;
+        }
+    }
+
+
     public void SetInvincible(bool status)
     {
         invincible = status;
