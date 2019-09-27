@@ -24,26 +24,7 @@ public class GameSession : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        foreach (GameObject button in baronButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in guardButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in princeButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in kingButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in priestButtons)
-        {
-            button.SetActive(false);
-        }
+        DisablePlayerButtons();
         deck = FindObjectOfType<Deck>();
 
         foreach (Player player in players)
@@ -79,6 +60,30 @@ public class GameSession : MonoBehaviour
         }
     }
 
+    private void DisablePlayerButtons()
+    {
+        foreach (GameObject button in baronButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in guardButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in princeButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in kingButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in priestButtons)
+        {
+            button.SetActive(false);
+        }
+    }
+
     public void BaronTargetChosen(Player player)
     {
         // Debug.Log(player.GetCurrentCard());
@@ -100,6 +105,7 @@ public class GameSession : MonoBehaviour
             return;
         }
         ChangeCurrentPlayer();
+        DisablePlayerButtons();
     }
 
     public void PlayCard(Card card)
