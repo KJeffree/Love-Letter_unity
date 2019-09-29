@@ -19,6 +19,8 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] kingButtons;
     [SerializeField] GameObject[] priestButtons;
 
+    Card hiddenCard;
+
 
 
     // Start is called before the first frame update
@@ -26,6 +28,10 @@ public class GameSession : MonoBehaviour
     {
         DisablePlayerButtons();
         deck = FindObjectOfType<Deck>();
+
+        hiddenCard = deck.DealHiddenCard();
+        hiddenCard.transform.position = new Vector3(1.5f, hiddenCard.transform.position.y, hiddenCard.transform.position.z);
+        Debug.Log(hiddenCard.transform.position.x);
 
         foreach (Player player in players)
         {
@@ -50,6 +56,14 @@ public class GameSession : MonoBehaviour
             currentPlayerNumber = 0;
         }
         currentPlayer.SetInvincible(false);
+    }
+
+    private void DisplayPlayerButtonsPrince()
+    {
+        foreach (GameObject button in princeButtons)
+        {
+            button.SetActive(true);
+        }
     }
 
     private void DisplayPlayerButtonsBaron()
@@ -86,10 +100,6 @@ public class GameSession : MonoBehaviour
 
     public void BaronTargetChosen(Player player)
     {
-        // Debug.Log(player.GetCurrentCard());
-        Debug.Log(player.GetCurrentCardValue());
-        Debug.Log(currentPlayer.GetCurrentCardValue());
-
         if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
         {
             MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
@@ -105,36 +115,48 @@ public class GameSession : MonoBehaviour
         DisablePlayerButtons();
     }
 
+    public void PrinceTargetChosen(Player player)
+    {
+        MoveCardToDiscard(player.GetCurrentCard(), player);
+        deck.DealCard(player);
+        DisablePlayerButtons();
+        ChangeCurrentPlayer();
+
+    }
+
     public void PlayCard(Card card)
     {
-        switch (card.tag)
+        if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
         {
-            case "Guard":
-                PlayGuard(card);
-                break;
-            case "Priest":
-                PlayPriest(card);
-                break;
-            case "Baron":
-                PlayBaron(card);
-                break;
-            case "Handmaid":
-                PlayHandmaid(card);
-                break;
-            case "Prince":
-                PlayPrince(card);
-                break;
-            case "King":
-                PlayKing(card);
-                break;
-            case "Countess":
-                PlayCountess(card);
-                break;
-            case "Princess":
-                PlayPrincess(card);
-                break;
-            default:
-                break;
+            switch (card.tag)
+            {
+                case "Guard":
+                    PlayGuard(card);
+                    break;
+                case "Priest":
+                    PlayPriest(card);
+                    break;
+                case "Baron":
+                    PlayBaron(card);
+                    break;
+                case "Handmaid":
+                    PlayHandmaid(card);
+                    break;
+                case "Prince":
+                    PlayPrince(card);
+                    break;
+                case "King":
+                    PlayKing(card);
+                    break;
+                case "Countess":
+                    PlayCountess(card);
+                    break;
+                case "Princess":
+                    PlayPrincess(card);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -152,7 +174,6 @@ public class GameSession : MonoBehaviour
     }
     public void PlayBaron(Card card)
     {
-        // currentPlayer.WaitForPlayerChoice();
         DisplayPlayerButtonsBaron();
         MoveCardToDiscard(card, currentPlayer);
     }
@@ -165,9 +186,8 @@ public class GameSession : MonoBehaviour
     }
     public void PlayPrince(Card card)
     {
-        Debug.Log("PlayingPrince");
+        DisplayPlayerButtonsPrince();
         MoveCardToDiscard(card, currentPlayer);
-        ChangeCurrentPlayer();
     }
     public void PlayKing(Card card)
     {

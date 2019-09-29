@@ -57,6 +57,11 @@ public class Player : MonoBehaviour
         return currentCards[0];
     }
 
+    public List<Card> GetCurrentCards()
+    {
+        return currentCards;
+    }
+
     public int GetCurrentCardsNumber()
     {
         return currentCards.Count;
