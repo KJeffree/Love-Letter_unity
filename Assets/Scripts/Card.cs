@@ -23,6 +23,17 @@ public class Card : MonoBehaviour
         return value;
     }
 
+    public void FlipCard()
+    {
+        if (GetComponent<SpriteRenderer>().sprite == front)
+        {
+            GetComponent<SpriteRenderer>().sprite = back;
+        } else 
+        {
+            GetComponent<SpriteRenderer>().sprite = front;
+        }
+    }
+
     public void DestroyCard()
     {
         Destroy(gameObject);

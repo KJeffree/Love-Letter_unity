@@ -123,6 +123,19 @@ public class GameSession : MonoBehaviour
         canDeal = false;
     }
 
+    private void DisplayPlayerButtonsPriest()
+    {
+        for (int i = 0; i < priestButtons.Length; i++)
+        {
+            Debug.Log(players[i+1]);
+            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
+            {
+                priestButtons[i].SetActive(true);
+            }
+        }
+        canDeal = false;
+    }
+
     private void DisablePlayerButtons()
     {
         foreach (GameObject button in baronButtons)
@@ -218,6 +231,21 @@ public class GameSession : MonoBehaviour
         canDeal = true;
     }
 
+    public void PriestTargetChosen(Player player)
+    {
+        player.GetCurrentCard().FlipCard();
+        StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
+        DisablePlayerButtons();
+        ChangeCurrentPlayer();
+        canDeal = true;
+    }
+
+    IEnumerator WaitAndFlip(Card card)
+    {
+        yield return new WaitForSeconds(3);
+        card.FlipCard();
+    }
+
     public void PlayCard(Card card)
     {
         if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
@@ -261,8 +289,8 @@ public class GameSession : MonoBehaviour
     }
     public void PlayPriest(Card card)
     {
+        DisplayPlayerButtonsPriest();
         MoveCardToDiscard(card, currentPlayer);
-        ChangeCurrentPlayer();
     }
     public void PlayBaron(Card card)
     {
@@ -313,6 +341,7 @@ public class GameSession : MonoBehaviour
 
     public void MoveCardToDiscard(Card card, Player player)
     {
+        card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
         player.RemoveCard(card);
         player.AddToPlayedCards(card);
         Vector3 discardPile = player.GetDiscardPile().transform.position;

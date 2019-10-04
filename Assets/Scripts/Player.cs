@@ -99,7 +99,7 @@ public class Player : MonoBehaviour
 
     public void AddCard(Card card)
     {
-        card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
+        card.GetComponent<SpriteRenderer>().sprite = playerNumber == 1 ? card.GetFrontImage() : card.GetBackImage() ;
         card.gameObject.tag = card.gameObject.transform.name;
         if (currentCards.Count == 0)
         {
@@ -116,7 +116,14 @@ public class Player : MonoBehaviour
         currentCards.Add(card);
         card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
         card.transform.rotation = Quaternion.Euler(0, 0, cardRotation);
+        if (playerNumber == 1)
+        {
+            card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
+        } else 
+        {
+            card.GetComponent<SpriteRenderer>().sprite = card.GetBackImage();
 
+        }
     }
     
     public void PositionSingleCard()
