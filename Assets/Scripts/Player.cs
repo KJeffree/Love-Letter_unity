@@ -109,6 +109,15 @@ public class Player : MonoBehaviour
             currentCards.Add(Instantiate(card, new Vector3(xPos2, yPos2, transform.position.z - 1), Quaternion.Euler(0, 0, cardRotation)));
         }
     }
+
+    public void SwapCard(Card card)
+    {
+        currentCards.RemoveAt(0);
+        currentCards.Add(card);
+        card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
+        card.transform.rotation = Quaternion.Euler(0, 0, cardRotation);
+
+    }
     
     public void PositionSingleCard()
     {

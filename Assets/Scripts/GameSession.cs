@@ -22,6 +22,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] priestButtons;
 
     Card hiddenCard;
+    Card hiddenCardVisible;
 
 
 
@@ -32,7 +33,7 @@ public class GameSession : MonoBehaviour
         deck = FindObjectOfType<Deck>();
 
         hiddenCard = deck.DealHiddenCard();
-        Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
+        hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
 
         foreach (Player player in players)
         {
@@ -56,7 +57,7 @@ public class GameSession : MonoBehaviour
         {
             currentPlayerNumber = 0;
         }
-        currentPlayer.SetInvincible(false);
+        players[currentPlayerNumber].SetInvincible(false);
         // causing stack overflow
         
         if (players[currentPlayerNumber].GetActive() == false)
@@ -81,9 +82,21 @@ public class GameSession : MonoBehaviour
     {
         for (int i = 0; i < baronButtons.Length; i++)
         {
-            if (players[i+1].GetActive() && !players[i].GetInvincible())
+            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
             {
                 baronButtons[i].SetActive(true);
+            }
+        }
+        canDeal = false;
+    }
+
+    private void DisplayPlayerButtonsKing()
+    {
+        for (int i = 0; i < kingButtons.Length; i++)
+        {
+            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
+            {
+                kingButtons[i].SetActive(true);
             }
         }
         canDeal = false;
@@ -138,10 +151,22 @@ public class GameSession : MonoBehaviour
         } else
         {
             player.AddCard(hiddenCard);
+            Destroy(hiddenCardVisible.gameObject);
         }
         DisablePlayerButtons();
         ChangeCurrentPlayer();
         canDeal = true;
+    }
+
+    public void KingTargetChosen(Player player)
+    {
+        Card currentPlayerCard = currentPlayer.GetCurrentCard();
+        Card targetPlayerCard = player.GetCurrentCard();
+        currentPlayer.SwapCard(targetPlayerCard);
+        player.SwapCard(currentPlayerCard);
+        DisablePlayerButtons();
+        ChangeCurrentPlayer(); 
+        canDeal = true;      
     }
 
     public void PlayCard(Card card)
@@ -208,8 +233,8 @@ public class GameSession : MonoBehaviour
     }
     public void PlayKing(Card card)
     {
+        DisplayPlayerButtonsKing();
         MoveCardToDiscard(card, currentPlayer);
-        ChangeCurrentPlayer();
     }
     public void PlayCountess(Card card)
     {
