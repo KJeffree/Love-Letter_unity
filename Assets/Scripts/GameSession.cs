@@ -144,14 +144,19 @@ public class GameSession : MonoBehaviour
 
     public void PrinceTargetChosen(Player player)
     {
-        MoveCardToDiscard(player.GetCurrentCard(), player);
-        if (deck.NumberOfCards() > 0)
+        if (player.GetCurrentCard().GetValue() == 8)
         {
-            deck.DealCard(player);
-        } else
-        {
-            player.AddCard(hiddenCard);
-            Destroy(hiddenCardVisible.gameObject);
+            MoveCardToDiscard(player.GetCurrentCard(), player);
+        } else {
+            MoveCardToDiscard(player.GetCurrentCard(), player);
+            if (deck.NumberOfCards() > 0)
+            {
+                deck.DealCard(player);
+            } else
+            {
+                player.AddCard(hiddenCard);
+                Destroy(hiddenCardVisible.gameObject);
+            }
         }
         DisablePlayerButtons();
         ChangeCurrentPlayer();
@@ -258,6 +263,7 @@ public class GameSession : MonoBehaviour
     public void PlayPrincess(Card card)
     {
         MoveCardToDiscard(card, currentPlayer);
+        currentPlayer.SetActive(false);
         ChangeCurrentPlayer();
     }
 
@@ -288,6 +294,14 @@ public class GameSession : MonoBehaviour
         card.transform.position = discardPosition;
 
         player.PositionSingleCard();
+        if (card.GetValue() == 8)
+        {
+            player.SetActive(false);
+            if (player.GetCurrentCards().Count > 0)
+            {
+                MoveCardToDiscard(player.GetCurrentCard(), player);  
+            }
+        }
     }
 
     public void DealCard()
