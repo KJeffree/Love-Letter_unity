@@ -228,11 +228,25 @@ public class GameSession : MonoBehaviour
     }
     public void PlayPrince(Card card)
     {
+        foreach (Card currentCard in currentPlayer.GetCurrentCards())
+        {
+            if (currentCard.GetValue() == 7 || currentCard.GetValue() == 7)
+            {
+                return;
+            }
+        }
         DisplayPlayerButtonsPrince();
         MoveCardToDiscard(card, currentPlayer);
     }
     public void PlayKing(Card card)
     {
+        foreach (Card currentCard in currentPlayer.GetCurrentCards())
+        {
+            if (currentCard.GetValue() == 7 || currentCard.GetValue() == 7)
+            {
+                return;
+            }
+        }
         DisplayPlayerButtonsKing();
         MoveCardToDiscard(card, currentPlayer);
     }
