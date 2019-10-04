@@ -3723,7 +3723,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: BaronTargetChosen
+        m_MethodName: PriestTargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1512267804}
@@ -4144,7 +4144,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: BaronTargetChosen
+        m_MethodName: PriestTargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1812363985}
@@ -5114,7 +5114,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: BaronTargetChosen
+        m_MethodName: PriestTargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1966358754}
