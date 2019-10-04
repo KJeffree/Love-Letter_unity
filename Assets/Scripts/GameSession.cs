@@ -20,11 +20,12 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] princeButtons;
     [SerializeField] GameObject[] kingButtons;
     [SerializeField] GameObject[] priestButtons;
+    [SerializeField] GameObject[] cardValueButtons;
 
     Card hiddenCard;
     Card hiddenCardVisible;
 
-
+    Player guardTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -102,6 +103,26 @@ public class GameSession : MonoBehaviour
         canDeal = false;
     }
 
+    private void DisplayTargetCardButtons()
+    {
+        foreach (GameObject button in cardValueButtons)
+        {
+            button.SetActive(true);
+        }
+    }
+
+    private void DisplayPlayerButtonsGuard()
+    {
+        for (int i = 0; i < guardButtons.Length; i++)
+        {
+            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
+            {
+                guardButtons[i].SetActive(true);
+            }
+        }
+        canDeal = false;
+    }
+
     private void DisablePlayerButtons()
     {
         foreach (GameObject button in baronButtons)
@@ -121,6 +142,10 @@ public class GameSession : MonoBehaviour
             button.SetActive(false);
         }
         foreach (GameObject button in priestButtons)
+        {
+            button.SetActive(false);
+        }
+        foreach (GameObject button in cardValueButtons)
         {
             button.SetActive(false);
         }
@@ -174,6 +199,25 @@ public class GameSession : MonoBehaviour
         canDeal = true;      
     }
 
+    public void GuardTargetChosen(Player player)
+    {
+        guardTarget = player;
+        DisablePlayerButtons();
+        DisplayTargetCardButtons();
+    }
+
+    public void GuardTargetCardChosen(int cardValue)
+    {
+        if (guardTarget.GetCurrentCard().GetValue() == cardValue)
+        {
+            MoveCardToDiscard(guardTarget.GetCurrentCard(), guardTarget);
+            guardTarget.SetActive(false);
+        }
+        DisablePlayerButtons();
+        ChangeCurrentPlayer();
+        canDeal = true;
+    }
+
     public void PlayCard(Card card)
     {
         if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
@@ -212,8 +256,8 @@ public class GameSession : MonoBehaviour
 
     public void PlayGuard(Card card)
     {
+        DisplayPlayerButtonsGuard();
         MoveCardToDiscard(card, currentPlayer);
-        ChangeCurrentPlayer();
     }
     public void PlayPriest(Card card)
     {
