@@ -32,7 +32,7 @@ public class GameSession : MonoBehaviour
         deck = FindObjectOfType<Deck>();
 
         hiddenCard = deck.DealHiddenCard();
-        hiddenCard.transform.position = new Vector3(1.5f, hiddenCard.transform.position.y, hiddenCard.transform.position.z);
+        Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
 
         foreach (Player player in players)
         {
@@ -59,17 +59,16 @@ public class GameSession : MonoBehaviour
         currentPlayer.SetInvincible(false);
         // causing stack overflow
         
-        // if (currentPlayer.GetActive() == false)
-        // {
-        //     ChangeCurrentPlayer();
-        // }
+        if (players[currentPlayerNumber].GetActive() == false)
+        {
+            ChangeCurrentPlayer();
+        }
     }
 
     private void DisplayPlayerButtonsPrince()
     {
         for (int i = 0; i < princeButtons.Length; i++)
         {
-            Debug.Log(princeButtons.Length);
             if (players[i].GetActive() && !players[i].GetInvincible())
             {
                 princeButtons[i].SetActive(true);
@@ -82,7 +81,6 @@ public class GameSession : MonoBehaviour
     {
         for (int i = 0; i < baronButtons.Length; i++)
         {
-            Debug.Log(baronButtons.Length);
             if (players[i+1].GetActive() && !players[i].GetInvincible())
             {
                 baronButtons[i].SetActive(true);
@@ -120,11 +118,9 @@ public class GameSession : MonoBehaviour
         if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
         {
             MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
-            Debug.Log("target higher value");
             currentPlayer.SetActive(false);
         } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
         {
-            Debug.Log("player higher value");
             MoveCardToDiscard(player.currentCards[0], player);
             player.SetActive(false);
         }
@@ -136,11 +132,16 @@ public class GameSession : MonoBehaviour
     public void PrinceTargetChosen(Player player)
     {
         MoveCardToDiscard(player.GetCurrentCard(), player);
-        deck.DealCard(player);
+        if (deck.NumberOfCards() > 0)
+        {
+            deck.DealCard(player);
+        } else
+        {
+            player.AddCard(hiddenCard);
+        }
         DisablePlayerButtons();
         ChangeCurrentPlayer();
         canDeal = true;
-
     }
 
     public void PlayCard(Card card)
@@ -181,13 +182,11 @@ public class GameSession : MonoBehaviour
 
     public void PlayGuard(Card card)
     {
-        Debug.Log("PlayingGuard");
         MoveCardToDiscard(card, currentPlayer);
         ChangeCurrentPlayer();
     }
     public void PlayPriest(Card card)
     {
-        Debug.Log("PlayingPriest");
         MoveCardToDiscard(card, currentPlayer);
         ChangeCurrentPlayer();
     }
@@ -200,7 +199,6 @@ public class GameSession : MonoBehaviour
     {
         currentPlayer.SetInvincible(true);
         MoveCardToDiscard(card, currentPlayer);
-        Debug.Log("PlayingHandmaid");
         ChangeCurrentPlayer();
     }
     public void PlayPrince(Card card)
@@ -210,19 +208,16 @@ public class GameSession : MonoBehaviour
     }
     public void PlayKing(Card card)
     {
-        Debug.Log("PlayingKing");
         MoveCardToDiscard(card, currentPlayer);
         ChangeCurrentPlayer();
     }
     public void PlayCountess(Card card)
     {
-        Debug.Log("PlayingCountess");
         MoveCardToDiscard(card, currentPlayer);
         ChangeCurrentPlayer();
     }
     public void PlayPrincess(Card card)
     {
-        Debug.Log("PlayingPrincess");   
         MoveCardToDiscard(card, currentPlayer);
         ChangeCurrentPlayer();
     }
@@ -230,7 +225,6 @@ public class GameSession : MonoBehaviour
     public void MoveCardToDiscard(Card card, Player player)
     {
         player.RemoveCard(card);
-        Debug.Log(player);
         player.AddToPlayedCards(card);
         Vector3 discardPile = player.GetDiscardPile().transform.position;
         Vector3 discardPosition = new Vector3(0, 0, 0);
@@ -238,16 +232,16 @@ public class GameSession : MonoBehaviour
         {
             if (player.GetNumber() == 1)
             {
-                discardPosition = new Vector3(discardPile.x + (player.GetPlayedCardsNumber() - 1), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));
+                discardPosition = new Vector3(discardPile.x + (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));
             } else if (player.GetNumber() == 2)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y - (player.GetPlayedCardsNumber() - 1), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x, discardPile.y - (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
             } else if (player.GetNumber() == 3)
             {
-                discardPosition = new Vector3(discardPile.x - (player.GetPlayedCardsNumber() - 1), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x - (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));            
             } else if (player.GetNumber() == 4)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y + (player.GetPlayedCardsNumber() - 1), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x, discardPile.y + (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
             }
         } else {
             discardPosition = player.GetDiscardPile().transform.position;

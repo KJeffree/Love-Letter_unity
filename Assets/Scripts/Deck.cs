@@ -33,6 +33,11 @@ public class Deck : MonoBehaviour
         };
     }
 
+    public int NumberOfCards()
+    {
+        return deck.Count;
+    }
+
     void Shuffle(List<Card> cards)
     {
         for (int i = cards.Count-1; i > 0; i--)
@@ -63,9 +68,10 @@ public class Deck : MonoBehaviour
     {
         Card lastCard = deck[deck.Count-1];
         Card card = visibleDeck[cardsDealt];
+        Destroy(card.gameObject);
         deck.RemoveAt(deck.Count-1);
         cardsDealt++;
-        return card;
+        return lastCard;
     }
 
     public void DealCard(Player player)
@@ -76,7 +82,6 @@ public class Deck : MonoBehaviour
         player.AddCard(lastCard);
         deck.RemoveAt(deck.Count-1);
         cardsDealt++;
-
     }
 
     // Update is called once per frame
