@@ -59,12 +59,57 @@ public class GameSession : MonoBehaviour
             currentPlayerNumber = 0;
         }
         players[currentPlayerNumber].SetInvincible(false);
-        // causing stack overflow
         
         if (players[currentPlayerNumber].GetActive() == false)
         {
             ChangeCurrentPlayer();
         }
+
+        currentPlayer = players[currentPlayerNumber];
+
+        if (currentPlayerNumber != 0)
+        {
+            Debug.Log("Computer Turn");
+            ComputerTurn();
+        }
+    }
+
+    private void ComputerTurn()
+    {
+        StartCoroutine(WaitAndDeal());
+        Card chosenCard = null;
+        if (currentPlayer.GetCurrentCards()[0].GetValue() > currentPlayer.GetCurrentCards()[1].GetValue())
+        {
+            chosenCard = currentPlayer.GetCurrentCards()[1];
+        } else 
+        {
+            chosenCard = currentPlayer.GetCurrentCards()[0];
+        }
+        Debug.Log(chosenCard);
+        // choose random card, unless one card is princess.
+        // if 1, 2, 3, or 6 choose a random player other than self.
+        // if 5 choose random player including self, unless other card is princess.
+        // if 5 and only available choice, chose self.
+        // 
+    }
+
+    IEnumerator WaitAndDeal()
+    {
+        yield return new WaitForEndOfFrame();
+        DealCard();
+    }
+
+    private List<Player> AvailableTargets()
+    {
+        List<Player> availablePlayers = new List<Player>();
+        foreach (Player player in players)
+        {
+            if (player.GetActive() && !player.GetInvincible() && player.GetNumber() != currentPlayerNumber)
+            {
+                availablePlayers.Add(player);
+            }
+        }
+        return availablePlayers;
     }
 
     private void DisplayPlayerButtonsPrince()
@@ -235,15 +280,15 @@ public class GameSession : MonoBehaviour
     {
         player.GetCurrentCard().FlipCard();
         StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
-        DisablePlayerButtons();
-        ChangeCurrentPlayer();
-        canDeal = true;
     }
 
     IEnumerator WaitAndFlip(Card card)
     {
         yield return new WaitForSeconds(3);
         card.FlipCard();
+        DisablePlayerButtons();
+        ChangeCurrentPlayer();
+        canDeal = true;
     }
 
     public void PlayCard(Card card)
