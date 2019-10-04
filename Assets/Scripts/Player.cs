@@ -6,7 +6,7 @@ public class Player : MonoBehaviour
 {
     public List<Card> currentCards;
 
-    public bool active;
+    public bool active = true;
 
     public float xPos1;
     public float yPos1;
@@ -50,6 +50,16 @@ public class Player : MonoBehaviour
     public GameObject GetDiscardPile()
     {
         return discardCardPile;
+    }
+
+    public bool GetActive()
+    {
+        return active;
+    }
+
+    public bool GetInvincible()
+    {
+        return invincible;
     }
 
     public Card GetCurrentCard()

@@ -62,8 +62,10 @@ public class Deck : MonoBehaviour
     public Card DealHiddenCard()
     {
         Card lastCard = deck[deck.Count-1];
+        Card card = visibleDeck[cardsDealt];
         deck.RemoveAt(deck.Count-1);
-        return lastCard;
+        cardsDealt++;
+        return card;
     }
 
     public void DealCard(Player player)

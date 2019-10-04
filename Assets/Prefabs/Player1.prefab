@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentCards: []
-  active: 0
+  active: 1
   xPos1: 2
   yPos1: -3.25
   xPos2: 3
@@ -53,3 +53,5 @@ MonoBehaviour:
     type: 3}
   cardRotation: 0
   playerNumber: 1
+  playedCards: []
+  invincible: 0
