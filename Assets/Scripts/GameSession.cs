@@ -9,6 +9,8 @@ public class GameSession : MonoBehaviour
 
     Deck deck;
 
+    bool gameInPlay = true;
+
     int currentPlayerNumber = 0;
 
     public Player currentPlayer;
@@ -48,6 +50,19 @@ public class GameSession : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        List<Player> activePlayers = new List<Player>();
+        foreach (Player player in players)
+        {
+            if (player.GetActive())
+            {
+                activePlayers.Add(player);
+            }
+        }
+        if (activePlayers.Count == 1 && gameInPlay)
+        {
+            StopAllCoroutines();
+            GameOver();
+        }
     }
 
     void ChangeCurrentPlayer()
@@ -85,12 +100,13 @@ public class GameSession : MonoBehaviour
 
     private void GameOver()
     {
+        gameInPlay = false;
         Debug.Log("Game finished");
     }
 
     IEnumerator ComputerTurn()
     {
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(1);
         DealCard();
         Card chosenCard = ChooseCard();
         Player chosenPlayer = ChoosePlayer();
@@ -203,38 +219,59 @@ public class GameSession : MonoBehaviour
 
     private void DisplayPlayerButtonsPrince()
     {
+        int numberOfActivePlayers = 0;
         for (int i = 0; i < princeButtons.Length; i++)
         {
             if (players[i].GetActive() && !players[i].GetInvincible())
             {
                 princeButtons[i].SetActive(true);
+                numberOfActivePlayers++;
             }
         }
         canDeal = false;
+        if (numberOfActivePlayers == 0)
+        {
+            ChangeCurrentPlayer();
+            canDeal = true;
+        }
     }
 
     private void DisplayPlayerButtonsBaron()
     {
+        int numberOfActivePlayers = 0;
         for (int i = 0; i < baronButtons.Length; i++)
         {
             if (players[i+1].GetActive() && !players[i+1].GetInvincible())
             {
                 baronButtons[i].SetActive(true);
+                numberOfActivePlayers++;
             }
         }
         canDeal = false;
+        if (numberOfActivePlayers == 0)
+        {
+            ChangeCurrentPlayer();
+            canDeal = true;
+        }
     }
 
     private void DisplayPlayerButtonsKing()
     {
+        int numberOfActivePlayers = 0;
         for (int i = 0; i < kingButtons.Length; i++)
         {
             if (players[i+1].GetActive() && !players[i+1].GetInvincible())
             {
                 kingButtons[i].SetActive(true);
+                numberOfActivePlayers++;
             }
         }
         canDeal = false;
+        if (numberOfActivePlayers == 0)
+        {
+            ChangeCurrentPlayer();
+            canDeal = true;
+        }
     }
 
     private void DisplayTargetCardButtons()
@@ -247,26 +284,40 @@ public class GameSession : MonoBehaviour
 
     private void DisplayPlayerButtonsGuard()
     {
+        int numberOfActivePlayers = 0;
         for (int i = 0; i < guardButtons.Length; i++)
         {
             if (players[i+1].GetActive() && !players[i+1].GetInvincible())
             {
                 guardButtons[i].SetActive(true);
+                numberOfActivePlayers++;
             }
         }
         canDeal = false;
+        if (numberOfActivePlayers == 0)
+        {
+            ChangeCurrentPlayer();
+            canDeal = true;
+        }
     }
 
     private void DisplayPlayerButtonsPriest()
     {
+        int numberOfActivePlayers = 0;
         for (int i = 0; i < priestButtons.Length; i++)
         {
             if (players[i+1].GetActive() && !players[i+1].GetInvincible())
             {
                 priestButtons[i].SetActive(true);
+                numberOfActivePlayers++;
             }
         }
         canDeal = false;
+        if (numberOfActivePlayers == 0)
+        {
+            ChangeCurrentPlayer();
+            canDeal = true;
+        }
     }
 
     private void DisablePlayerButtons()
