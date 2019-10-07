@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,12 +9,17 @@ public class Deck : MonoBehaviour
 
     [SerializeField] List<Card> deck;
 
-    Card[] visibleDeck;
+    public Card[] visibleDeck;
 
     int cardsDealt = 0;
 
     // Start is called before the first frame update
     void Start()
+    {
+        
+    }
+
+    public void SetUpDeck()
     {
         PopulateDeck();
         Shuffle(deck);
@@ -42,11 +48,17 @@ public class Deck : MonoBehaviour
     {
         for (int i = cards.Count-1; i > 0; i--)
         {
-            int rnd = Random.Range(0,i);
+            int rnd = UnityEngine.Random.Range(0,i);
             Card temp = cards[i];
             cards[i] = cards[rnd];
             cards[rnd] = temp;
         }
+    }
+
+    public void ClearDeck()
+    {
+        deck.Clear();
+        cardsDealt = 0;
     }
 
     void DisplayCardDeck(List<Card> deck)
@@ -61,6 +73,7 @@ public class Deck : MonoBehaviour
             counter += 0.1f;
             position += 0.03f;
         }
+        Array.Clear(visibleDeck, 0, visibleDeck.Length);
         visibleDeck = FindObjectsOfType<Card>();
     }
 
@@ -78,6 +91,7 @@ public class Deck : MonoBehaviour
     {
         Card lastCard = deck[deck.Count-1];
         Card card = visibleDeck[cardsDealt];
+        Debug.Log(card);
         Destroy(card.gameObject);
         player.AddCard(lastCard);
         deck.RemoveAt(deck.Count-1);

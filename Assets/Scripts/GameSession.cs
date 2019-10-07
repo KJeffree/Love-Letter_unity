@@ -34,7 +34,13 @@ public class GameSession : MonoBehaviour
     {
         DisablePlayerButtons();
         deck = FindObjectOfType<Deck>();
+        SetUpRound();
+    }
 
+    private void SetUpRound()
+    {
+        currentPlayerNumber = 0;
+        deck.SetUpDeck();
         hiddenCard = deck.DealHiddenCard();
         hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
 
@@ -43,7 +49,7 @@ public class GameSession : MonoBehaviour
             deck.DealCard(player);
         }
         currentPlayer = players[currentPlayerNumber];
-
+        gameInPlay = true;
     }
 
 
@@ -101,7 +107,86 @@ public class GameSession : MonoBehaviour
     private void GameOver()
     {
         gameInPlay = false;
-        Debug.Log("Game finished");
+        List<Player> activePlayers = new List<Player>();
+        foreach (Player player in players)
+        {
+            if (player.GetActive())
+            {
+                activePlayers.Add(player);
+            }
+        }
+        if (activePlayers.Count == 1)
+        {
+            activePlayers[0].AddPoint();
+        } 
+        else 
+        {
+            List<Player> playersWithHighestValueCard = new List<Player>();
+            int highestCardValue = 0;
+            foreach (Player player in activePlayers)
+            {
+                if (player.GetCurrentCard().GetValue() > highestCardValue)
+                {
+                    highestCardValue = player.GetCurrentCard().GetValue();
+                    playersWithHighestValueCard.Clear();
+                    playersWithHighestValueCard.Add(player);
+                } else if (player.GetCurrentCard().GetValue() == highestCardValue)
+                {
+                    playersWithHighestValueCard.Add(player);
+                }
+            }
+
+            if (playersWithHighestValueCard.Count == 1)
+            {
+                playersWithHighestValueCard[0].AddPoint();
+            } 
+            else 
+            {
+                List<Player> playersWithHighestValueDiscardPile = new List<Player>();
+                int highestDiscardPileValue = 0;
+                foreach (Player player in playersWithHighestValueCard)
+                {
+                    if (player.TotalValueOfPlayedCards() > highestDiscardPileValue)
+                    {
+                        highestDiscardPileValue = player.TotalValueOfPlayedCards();
+                        playersWithHighestValueDiscardPile.Clear();
+                        playersWithHighestValueDiscardPile.Add(player);
+                    } else if (player.TotalValueOfPlayedCards() == highestDiscardPileValue)
+                    {
+                        playersWithHighestValueDiscardPile.Add(player);
+                    }
+
+                }
+
+                if (playersWithHighestValueDiscardPile.Count == 1)
+                {
+                    playersWithHighestValueDiscardPile[0].AddPoint();
+                } else {
+                    foreach (Player player in playersWithHighestValueDiscardPile)
+                    {
+                        player.AddPoint();
+                    }
+                }
+            }
+        }
+
+        StartCoroutine(StartNewRound());
+    }
+
+    IEnumerator StartNewRound()
+    {
+        yield return new WaitForSeconds(5);
+        foreach (Player player in players)
+        {
+            player.NewRound();
+        }
+        Card[] cards = FindObjectsOfType<Card>();
+        foreach (Card card in cards)
+        {
+            Destroy(card.gameObject);
+        }
+        deck.ClearDeck();
+        SetUpRound();
     }
 
     IEnumerator ComputerTurn()
@@ -486,7 +571,7 @@ public class GameSession : MonoBehaviour
                     {
                         if (currentCard.GetValue() == 7)
                         {
-                            break;
+                            return;
                         }
                     }
                     MoveCardToDiscard(card, currentPlayer);
@@ -497,7 +582,7 @@ public class GameSession : MonoBehaviour
                         {
                             if (currentCard.GetValue() == 7)
                             {
-                                break;
+                                return;
                             }
                         }
                     MoveCardToDiscard(card, currentPlayer);

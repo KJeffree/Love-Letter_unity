@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
     public int cardRotation;
 
-    int points;
+    public int points;
 
     public int playerNumber;
 
@@ -45,6 +45,29 @@ public class Player : MonoBehaviour
     public void SetActive(bool status)
     {
         active = status;
+    }
+
+    public void AddPoint()
+    {
+        points++;
+    }
+
+    public void NewRound()
+    {
+        currentCards.Clear();
+        playedCards.Clear();
+        active = true;
+        invincible = false;
+    }
+
+    public int TotalValueOfPlayedCards()
+    {
+        int total = 0;
+        foreach (Card card in playedCards)
+        {
+            total += card.GetValue();
+        }
+        return total;
     }
 
     public GameObject GetDiscardPile()
