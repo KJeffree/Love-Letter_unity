@@ -11,7 +11,7 @@ public class GameSession : MonoBehaviour
 
     int currentPlayerNumber = 0;
 
-    Player currentPlayer;
+    public Player currentPlayer;
 
     bool canDeal = true;
 
@@ -40,17 +40,24 @@ public class GameSession : MonoBehaviour
         {
             deck.DealCard(player);
         }
+        currentPlayer = players[currentPlayerNumber];
+
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        currentPlayer = players[currentPlayerNumber];
     }
 
     void ChangeCurrentPlayer()
     {
+        if (deck.NumberOfCards() == 0)
+        {
+            GameOver();
+            return;
+        }
+
         if (currentPlayerNumber < 3)
         {
             currentPlayerNumber++;
@@ -58,34 +65,37 @@ public class GameSession : MonoBehaviour
         {
             currentPlayerNumber = 0;
         }
-        players[currentPlayerNumber].SetInvincible(false);
+        currentPlayer = players[currentPlayerNumber];
+
+        currentPlayer.SetInvincible(false);
         
-        if (players[currentPlayerNumber].GetActive() == false)
+        if (currentPlayer.GetActive() == false)
         {
             ChangeCurrentPlayer();
+            return;
         }
 
-        currentPlayer = players[currentPlayerNumber];
+        // Debug.Log("Current Player: " + currentPlayer.GetNumber());
 
         if (currentPlayerNumber != 0)
         {
-            ComputerTurn();
+            StartCoroutine(ComputerTurn());
         }
     }
 
-    private void ComputerTurn()
+    private void GameOver()
     {
+        Debug.Log("Game finished");
+    }
+
+    IEnumerator ComputerTurn()
+    {
+        yield return new WaitForEndOfFrame();
         DealCard();
         Card chosenCard = ChooseCard();
         Player chosenPlayer = ChoosePlayer();
-        Debug.Log(chosenPlayer);
+        // Debug.Log("Chosen Player: " + chosenPlayer);
         StartCoroutine(WaitAndPlayCard(chosenCard, chosenPlayer));
-
-
-        // if 1, 2, 3, or 6 choose a random player other than self.
-        // if 5 choose random player including self, unless other card is princess.
-        // if 5 and only available choice, chose self.
-        // 
     }
 
     private Player ChoosePlayer()
@@ -94,7 +104,7 @@ public class GameSession : MonoBehaviour
         Player chosenPlayer = null;
         if (targets.Count == 0)
         {
-
+            chosenPlayer = null;
         } else if (targets.Count == 1)
         {
             chosenPlayer = targets[0];
@@ -137,39 +147,44 @@ public class GameSession : MonoBehaviour
             {
                 case "Guard":
                     PlayGuardComputer(chosenPlayer);
-                    Debug.Log("Guard chosen on " + chosenPlayer);
+                    // Debug.Log("Guard chosen on " + chosenPlayer);
                     break;
                 case "Priest":
                     PriestTargetChosen(chosenPlayer);
-                    Debug.Log("Priest chosen on " + chosenPlayer);
+                    // Debug.Log("Priest chosen on " + chosenPlayer);
                     break;
                 case "Baron":
                     BaronTargetChosen(chosenPlayer);
-                    Debug.Log("Baron chosen on " + chosenPlayer);
+                    // Debug.Log("Baron chosen on " + chosenPlayer);
                     break;
                 case "Handmaid":
                     PlayHandmaid();
-                    Debug.Log("Handmaid chosen");
+                    // Debug.Log("Handmaid chosen");
                     break;
                 case "Prince":
+                    if (!chosenPlayer)
+                    {
+                        chosenPlayer = currentPlayer;
+                    }
                     PrinceTargetChosen(chosenPlayer);
-                    Debug.Log("Prince chosen on " + chosenPlayer);
+                    // Debug.Log("Prince chosen on " + chosenPlayer);
                     break;
                 case "King":
                     KingTargetChosen(chosenPlayer);
-                    Debug.Log("King chosen on " + chosenPlayer);
+                    // Debug.Log("King chosen on " + chosenPlayer);
                     break;
                 case "Countess":
                     PlayCountess();
-                    Debug.Log("Countess chosen");
+                    // Debug.Log("Countess chosen");
                     break;
                 case "Princess":
                     PlayPrincess();
-                    Debug.Log("Princess chosen");
+                    // Debug.Log("Princess chosen");
                     break;
                 default:
                     break;
             }
+        ChangeCurrentPlayer();
     }
 
     private List<Player> AvailableTargets()
@@ -180,7 +195,7 @@ public class GameSession : MonoBehaviour
             if (player.GetActive() && !player.GetInvincible() && player != currentPlayer)
             {
                 availablePlayers.Add(player);
-                Debug.Log(player + " added");
+                // Debug.Log(player + " added");
             }
         }
         return availablePlayers;
@@ -284,18 +299,23 @@ public class GameSession : MonoBehaviour
 
     public void BaronTargetChosen(Player player)
     {
-        if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
+        if (player != null)
         {
-            MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
-            currentPlayer.SetActive(false);
-        } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
-        {
-            MoveCardToDiscard(player.currentCards[0], player);
-            player.SetActive(false);
+            if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
+            {
+                MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
+                currentPlayer.SetActive(false);
+            } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
+            {
+                MoveCardToDiscard(player.currentCards[0], player);
+                player.SetActive(false);
+            }
         }
-        canDeal = true;
-        ChangeCurrentPlayer();
         DisablePlayerButtons();
+        canDeal = true;
+        if (currentPlayer.GetNumber() == 1){
+            ChangeCurrentPlayer();
+        }
     }
 
     public void PrinceTargetChosen(Player player)
@@ -316,18 +336,25 @@ public class GameSession : MonoBehaviour
         }
         DisablePlayerButtons();
         canDeal = true;
-        ChangeCurrentPlayer();
-    }
+        if (currentPlayer.GetNumber() == 1){
+            ChangeCurrentPlayer();
+        }    
+        }
 
     public void KingTargetChosen(Player player)
     {
-        Card currentPlayerCard = currentPlayer.GetCurrentCard();
-        Card targetPlayerCard = player.GetCurrentCard();
-        currentPlayer.SwapCard(targetPlayerCard);
-        player.SwapCard(currentPlayerCard);
+        if (player != null)
+        {
+            Card currentPlayerCard = currentPlayer.GetCurrentCard();
+            Card targetPlayerCard = player.GetCurrentCard();
+            currentPlayer.SwapCard(targetPlayerCard);
+            player.SwapCard(currentPlayerCard);
+        }
         DisablePlayerButtons();
         canDeal = true;      
-        ChangeCurrentPlayer(); 
+        if (currentPlayer.GetNumber() == 1){
+            ChangeCurrentPlayer();
+        }
     }
 
     private void PlayGuardComputer(Player player)
@@ -346,25 +373,30 @@ public class GameSession : MonoBehaviour
 
     public void GuardTargetCardChosen(int cardValue)
     {
-        if (guardTarget.GetCurrentCard().GetValue() == cardValue)
+        if (guardTarget != null && guardTarget.GetCurrentCard().GetValue() == cardValue)
         {
             MoveCardToDiscard(guardTarget.GetCurrentCard(), guardTarget);
             guardTarget.SetActive(false);
         }
         DisablePlayerButtons();
         canDeal = true;
-        ChangeCurrentPlayer();
+        if (currentPlayer.GetNumber() == 1){
+            ChangeCurrentPlayer();
+        }
     }
 
     public void PriestTargetChosen(Player player)
     {
-        if (currentPlayer.GetNumber() == 1)
+        if (player != null && currentPlayer.GetNumber() == 1)
         {
             player.GetCurrentCard().FlipCard();
             StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
+        } else 
+        {
+            canDeal = true;
+            // ChangeCurrentPlayer();
         }
-        canDeal = true;
-        ChangeCurrentPlayer();
+        
     }
 
     IEnumerator WaitAndFlip(Card card)
@@ -380,19 +412,22 @@ public class GameSession : MonoBehaviour
     {
         if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
         {
-            MoveCardToDiscard(card, currentPlayer);
             switch (card.tag)
             {
                 case "Guard":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayGuard();
                     break;
                 case "Priest":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayPriest();
                     break;
                 case "Baron":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayBaron();
                     break;
                 case "Handmaid":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayHandmaid();
                     break;
                 case "Prince":
@@ -403,6 +438,7 @@ public class GameSession : MonoBehaviour
                             break;
                         }
                     }
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayPrince();
                     break;
                 case "King":
@@ -413,12 +449,15 @@ public class GameSession : MonoBehaviour
                                 break;
                             }
                         }
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayKing();
                     break;
                 case "Countess":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayCountess();
                     break;
                 case "Princess":
+                    MoveCardToDiscard(card, currentPlayer);
                     PlayPrincess();
                     break;
                 default:
@@ -445,7 +484,10 @@ public class GameSession : MonoBehaviour
     public void PlayHandmaid()
     {
         currentPlayer.SetInvincible(true);
-        ChangeCurrentPlayer();
+        if (currentPlayer.GetNumber() == 1)
+        {
+            ChangeCurrentPlayer();
+        }
     }
 
     public void PlayPrince()
@@ -460,13 +502,19 @@ public class GameSession : MonoBehaviour
 
     public void PlayCountess()
     {
-        ChangeCurrentPlayer();
+        if (currentPlayer.GetNumber() == 1)
+        {
+            ChangeCurrentPlayer();
+        }
     }
 
     public void PlayPrincess()
     {
         currentPlayer.SetActive(false);
-        ChangeCurrentPlayer();
+        if (currentPlayer.GetNumber() == 1)
+        {
+            ChangeCurrentPlayer();
+        }
     }
 
     public void MoveCardToDiscard(Card card, Player player)
@@ -513,14 +561,13 @@ public class GameSession : MonoBehaviour
         if (canDeal)
         {
 
-            Player currentPlayer = players[currentPlayerNumber];
             int previousPlayerNumber = (currentPlayerNumber == 0) ? 3 : currentPlayerNumber - 1;
 
             Player previousPlayer = players[previousPlayerNumber];
 
             if (currentPlayer.GetCurrentCardsNumber() < 2 && previousPlayer.GetCurrentCardsNumber() < 2)
             {
-                deck.DealCard(players[currentPlayerNumber]);
+                deck.DealCard(currentPlayer);
             } else {
 
                 return;
