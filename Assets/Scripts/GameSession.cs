@@ -17,11 +17,9 @@ public class GameSession : MonoBehaviour
 
     bool canDeal = true;
 
-    [SerializeField] GameObject[] baronButtons;
-    [SerializeField] GameObject[] guardButtons;
-    [SerializeField] GameObject[] princeButtons;
-    [SerializeField] GameObject[] kingButtons;
-    [SerializeField] GameObject[] priestButtons;
+    public int playedCardValue;
+
+    [SerializeField] GameObject[] playerButtons;
     [SerializeField] GameObject[] cardValueButtons;
 
     Card hiddenCard;
@@ -95,8 +93,6 @@ public class GameSession : MonoBehaviour
             ChangeCurrentPlayer();
             return;
         }
-
-        // Debug.Log("Current Player: " + currentPlayer.GetNumber());
 
         if (currentPlayerNumber != 0)
         {
@@ -195,7 +191,6 @@ public class GameSession : MonoBehaviour
         DealCard();
         Card chosenCard = ChooseCard();
         Player chosenPlayer = ChoosePlayer();
-        // Debug.Log("Chosen Player: " + chosenPlayer);
         StartCoroutine(WaitAndPlayCard(chosenCard, chosenPlayer));
     }
 
@@ -248,19 +243,15 @@ public class GameSession : MonoBehaviour
             {
                 case "Guard":
                     PlayGuardComputer(chosenPlayer);
-                    // Debug.Log("Guard chosen on " + chosenPlayer);
                     break;
                 case "Priest":
                     PriestTargetChosen(chosenPlayer);
-                    // Debug.Log("Priest chosen on " + chosenPlayer);
                     break;
                 case "Baron":
                     BaronTargetChosen(chosenPlayer);
-                    // Debug.Log("Baron chosen on " + chosenPlayer);
                     break;
                 case "Handmaid":
                     PlayHandmaid();
-                    // Debug.Log("Handmaid chosen");
                     break;
                 case "Prince":
                     if (!chosenPlayer)
@@ -268,19 +259,15 @@ public class GameSession : MonoBehaviour
                         chosenPlayer = currentPlayer;
                     }
                     PrinceTargetChosen(chosenPlayer);
-                    // Debug.Log("Prince chosen on " + chosenPlayer);
                     break;
                 case "King":
                     KingTargetChosen(chosenPlayer);
-                    // Debug.Log("King chosen on " + chosenPlayer);
                     break;
                 case "Countess":
                     PlayCountess();
-                    // Debug.Log("Countess chosen");
                     break;
                 case "Princess":
                     PlayPrincess();
-                    // Debug.Log("Princess chosen");
                     break;
                 default:
                     break;
@@ -296,58 +283,20 @@ public class GameSession : MonoBehaviour
             if (player.GetActive() && !player.GetInvincible() && player != currentPlayer)
             {
                 availablePlayers.Add(player);
-                // Debug.Log(player + " added");
             }
         }
         return availablePlayers;
     }
 
-    private void DisplayPlayerButtonsPrince()
+    private void DisplayPlayerButtons()
     {
         int numberOfActivePlayers = 0;
-        for (int i = 0; i < princeButtons.Length; i++)
+        int startIndex = playedCardValue == 5 ? 0 : 1;
+        for (int i = startIndex; i < playerButtons.Length; i++)
         {
             if (players[i].GetActive() && !players[i].GetInvincible())
             {
-                princeButtons[i].SetActive(true);
-                numberOfActivePlayers++;
-            }
-        }
-        canDeal = false;
-        if (numberOfActivePlayers == 0)
-        {
-            ChangeCurrentPlayer();
-            canDeal = true;
-        }
-    }
-
-    private void DisplayPlayerButtonsBaron()
-    {
-        int numberOfActivePlayers = 0;
-        for (int i = 0; i < baronButtons.Length; i++)
-        {
-            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
-            {
-                baronButtons[i].SetActive(true);
-                numberOfActivePlayers++;
-            }
-        }
-        canDeal = false;
-        if (numberOfActivePlayers == 0)
-        {
-            ChangeCurrentPlayer();
-            canDeal = true;
-        }
-    }
-
-    private void DisplayPlayerButtonsKing()
-    {
-        int numberOfActivePlayers = 0;
-        for (int i = 0; i < kingButtons.Length; i++)
-        {
-            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
-            {
-                kingButtons[i].SetActive(true);
+                playerButtons[i].SetActive(true);
                 numberOfActivePlayers++;
             }
         }
@@ -367,63 +316,9 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    private void DisplayPlayerButtonsGuard()
-    {
-        int numberOfActivePlayers = 0;
-        for (int i = 0; i < guardButtons.Length; i++)
-        {
-            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
-            {
-                guardButtons[i].SetActive(true);
-                numberOfActivePlayers++;
-            }
-        }
-        canDeal = false;
-        if (numberOfActivePlayers == 0)
-        {
-            ChangeCurrentPlayer();
-            canDeal = true;
-        }
-    }
-
-    private void DisplayPlayerButtonsPriest()
-    {
-        int numberOfActivePlayers = 0;
-        for (int i = 0; i < priestButtons.Length; i++)
-        {
-            if (players[i+1].GetActive() && !players[i+1].GetInvincible())
-            {
-                priestButtons[i].SetActive(true);
-                numberOfActivePlayers++;
-            }
-        }
-        canDeal = false;
-        if (numberOfActivePlayers == 0)
-        {
-            ChangeCurrentPlayer();
-            canDeal = true;
-        }
-    }
-
     private void DisablePlayerButtons()
     {
-        foreach (GameObject button in baronButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in guardButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in princeButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in kingButtons)
-        {
-            button.SetActive(false);
-        }
-        foreach (GameObject button in priestButtons)
+        foreach (GameObject button in playerButtons)
         {
             button.SetActive(false);
         }
@@ -451,6 +346,29 @@ public class GameSession : MonoBehaviour
         canDeal = true;
         if (currentPlayer.GetNumber() == 1){
             ChangeCurrentPlayer();
+        }
+    }
+
+    public void TargetChosen(Player player){
+        switch (playedCardValue)
+        {
+            case 1:
+                GuardTargetChosen(player);
+                break;
+            case 2:
+                PriestTargetChosen(player);
+                break;
+            case 3:
+                BaronTargetChosen(player);
+                break;
+            case 5:
+                PrinceTargetChosen(player);
+                break;
+            case 6:
+                KingTargetChosen(player);
+                break;
+            default:
+                break;
         }
     }
 
@@ -548,6 +466,7 @@ public class GameSession : MonoBehaviour
     {
         if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
         {
+            playedCardValue = card.GetValue();
             switch (card.tag)
             {
                 case "Guard":
@@ -604,17 +523,17 @@ public class GameSession : MonoBehaviour
 
     public void PlayGuard()
     {
-        DisplayPlayerButtonsGuard();
+        DisplayPlayerButtons();
     }
 
     public void PlayPriest()
     {
-        DisplayPlayerButtonsPriest();
+        DisplayPlayerButtons();
     }
 
     public void PlayBaron()
     {
-        DisplayPlayerButtonsBaron();
+        DisplayPlayerButtons();
     }
 
     public void PlayHandmaid()
@@ -628,12 +547,12 @@ public class GameSession : MonoBehaviour
 
     public void PlayPrince()
     {
-        DisplayPlayerButtonsPrince();
+        DisplayPlayerButtons();
     }
 
     public void PlayKing()
     {
-        DisplayPlayerButtonsKing();
+        DisplayPlayerButtons();
     }
 
     public void PlayCountess()
