@@ -227,7 +227,7 @@ public class GameSession : MonoBehaviour
                     playedCard.GetComponent<Priest>().PriestTargetChosen(chosenPlayer);
                     break;
                 case "Baron":
-                    BaronTargetChosen(chosenPlayer);
+                    playedCard.GetComponent<Baron>().BaronTargetChosen(chosenPlayer);
                     break;
                 case "Prince":
                     if (!chosenPlayer)
@@ -285,25 +285,6 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    public void BaronTargetChosen(Player player)
-    {
-        if (player != null)
-        {
-            if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
-            {
-                MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
-                currentPlayer.SetActive(false);
-            } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
-            {
-                MoveCardToDiscard(player.currentCards[0], player);
-                player.SetActive(false);
-            }
-        }
-        DisablePlayerButtons();
-        canDeal = true;
-        ChangeCurrentPlayer();
-    }
-
     public void TargetChosen(Player player){
         switch (playedCard.GetValue())
         {
@@ -314,7 +295,7 @@ public class GameSession : MonoBehaviour
                 playedCard.GetComponent<Priest>().PriestTargetChosen(player);
                 break;
             case 3:
-                BaronTargetChosen(player);
+                playedCard.GetComponent<Baron>().BaronTargetChosen(player);
                 break;
             case 5:
                 PrinceTargetChosen(player);
