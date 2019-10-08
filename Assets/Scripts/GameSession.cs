@@ -15,9 +15,9 @@ public class GameSession : MonoBehaviour
 
     public Player currentPlayer;
 
-    bool canDeal = true;
+    public bool canDeal = true;
 
-    public int playedCardValue;
+    public Card playedCard;
 
     [SerializeField] GameObject[] playerButtons;
     [SerializeField] GameObject[] cardValueButtons;
@@ -27,12 +27,15 @@ public class GameSession : MonoBehaviour
 
     Player guardTarget;
 
+    Computer computer;
+
     // Start is called before the first frame update
     void Start()
     {
         DisablePlayerButtons();
         deck = FindObjectOfType<Deck>();
         SetUpRound();
+        computer = FindObjectOfType<Computer>();
     }
 
     private void SetUpRound()
@@ -49,7 +52,6 @@ public class GameSession : MonoBehaviour
         currentPlayer = players[currentPlayerNumber];
         gameInPlay = true;
     }
-
 
     // Update is called once per frame
     void Update()
@@ -69,7 +71,16 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    void ChangeCurrentPlayer()
+    public void SetCanDeal(bool status)
+    {
+        canDeal = status;
+    }
+
+    public Player GetCurrentPlayer()
+    {
+        return currentPlayer;
+    }
+    public void ChangeCurrentPlayer()
     {
         if (deck.NumberOfCards() == 0)
         {
@@ -151,9 +162,7 @@ public class GameSession : MonoBehaviour
                     {
                         playersWithHighestValueDiscardPile.Add(player);
                     }
-
                 }
-
                 if (playersWithHighestValueDiscardPile.Count == 1)
                 {
                     playersWithHighestValueDiscardPile[0].AddPoint();
@@ -188,91 +197,8 @@ public class GameSession : MonoBehaviour
     IEnumerator ComputerTurn()
     {
         yield return new WaitForSeconds(1);
-        DealCard();
-        Card chosenCard = ChooseCard();
-        Player chosenPlayer = ChoosePlayer();
-        StartCoroutine(WaitAndPlayCard(chosenCard, chosenPlayer));
-    }
-
-    private Player ChoosePlayer()
-    {
-        List<Player> targets = AvailableTargets();
-        Player chosenPlayer = null;
-        if (targets.Count == 0)
-        {
-            chosenPlayer = null;
-        } else if (targets.Count == 1)
-        {
-            chosenPlayer = targets[0];
-        } else {
-            int randomIndex = Random.Range(0, targets.Count - 1);
-            chosenPlayer = targets[randomIndex];
-        }
-        return chosenPlayer;
-    }
-
-    private Card ChooseCard()
-    {
-        Card chosenCard = null;
-        Card card1 = currentPlayer.GetCurrentCards()[0];
-        Card card2 = currentPlayer.GetCurrentCards()[1];
-
-        if (card1.GetValue() == 7 && card2.GetValue() == 5 || card1.GetValue() == 7 && card2.GetValue() == 6)
-        {
-            chosenCard = card1;
-        }
-        else if (card2.GetValue() == 7 && card1.GetValue() == 5 || card2.GetValue() == 7 && card1.GetValue() == 6)
-        {
-            chosenCard = card2;
-        }
-        else if (card1.GetValue() > card2.GetValue())
-        {
-            chosenCard = card2;
-        } else 
-        {
-            chosenCard = card1;
-        }
-        return chosenCard;
-    }
-
-    IEnumerator WaitAndPlayCard(Card chosenCard, Player chosenPlayer)
-    {
-        yield return new WaitForSeconds(2);
-        MoveCardToDiscard(chosenCard, currentPlayer);
-        switch (chosenCard.tag)
-            {
-                case "Guard":
-                    PlayGuardComputer(chosenPlayer);
-                    break;
-                case "Priest":
-                    PriestTargetChosen(chosenPlayer);
-                    break;
-                case "Baron":
-                    BaronTargetChosen(chosenPlayer);
-                    break;
-                case "Handmaid":
-                    PlayHandmaid();
-                    break;
-                case "Prince":
-                    if (!chosenPlayer)
-                    {
-                        chosenPlayer = currentPlayer;
-                    }
-                    PrinceTargetChosen(chosenPlayer);
-                    break;
-                case "King":
-                    KingTargetChosen(chosenPlayer);
-                    break;
-                case "Countess":
-                    PlayCountess();
-                    break;
-                case "Princess":
-                    PlayPrincess();
-                    break;
-                default:
-                    break;
-            }
-        ChangeCurrentPlayer();
+        List<Player> availableTargets = AvailableTargets();
+        computer.TakeTurn(currentPlayer, AvailableTargets());
     }
 
     private List<Player> AvailableTargets()
@@ -288,10 +214,41 @@ public class GameSession : MonoBehaviour
         return availablePlayers;
     }
 
+    public void PlayCardComputer(Card chosenCard, Player chosenPlayer)
+    {
+        playedCard = chosenCard;
+        MoveCardToDiscard(chosenCard, currentPlayer);
+        switch (chosenCard.tag)
+            {
+                case "Guard":
+                    PlayGuardComputer(chosenPlayer);
+                    break;
+                case "Priest":
+                    playedCard.GetComponent<Priest>().PriestTargetChosen(chosenPlayer);
+                    break;
+                case "Baron":
+                    BaronTargetChosen(chosenPlayer);
+                    break;
+                case "Prince":
+                    if (!chosenPlayer)
+                    {
+                        chosenPlayer = currentPlayer;
+                    }
+                    PrinceTargetChosen(chosenPlayer);
+                    break;
+                case "King":
+                    KingTargetChosen(chosenPlayer);
+                    break;
+                default:
+                    break;
+            }
+        // ChangeCurrentPlayer();
+    }
+
     private void DisplayPlayerButtons()
     {
         int numberOfActivePlayers = 0;
-        int startIndex = playedCardValue == 5 ? 0 : 1;
+        int startIndex = playedCard.GetValue() == 5 ? 0 : 1;
         for (int i = startIndex; i < playerButtons.Length; i++)
         {
             if (players[i].GetActive() && !players[i].GetInvincible())
@@ -316,7 +273,7 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    private void DisablePlayerButtons()
+    public void DisablePlayerButtons()
     {
         foreach (GameObject button in playerButtons)
         {
@@ -344,19 +301,17 @@ public class GameSession : MonoBehaviour
         }
         DisablePlayerButtons();
         canDeal = true;
-        if (currentPlayer.GetNumber() == 1){
-            ChangeCurrentPlayer();
-        }
+        ChangeCurrentPlayer();
     }
 
     public void TargetChosen(Player player){
-        switch (playedCardValue)
+        switch (playedCard.GetValue())
         {
             case 1:
                 GuardTargetChosen(player);
                 break;
             case 2:
-                PriestTargetChosen(player);
+                playedCard.GetComponent<Priest>().PriestTargetChosen(player);
                 break;
             case 3:
                 BaronTargetChosen(player);
@@ -390,10 +345,8 @@ public class GameSession : MonoBehaviour
         }
         DisablePlayerButtons();
         canDeal = true;
-        if (currentPlayer.GetNumber() == 1){
-            ChangeCurrentPlayer();
-        }    
-        }
+        ChangeCurrentPlayer();
+    }
 
     public void KingTargetChosen(Player player)
     {
@@ -406,16 +359,21 @@ public class GameSession : MonoBehaviour
         }
         DisablePlayerButtons();
         canDeal = true;      
-        if (currentPlayer.GetNumber() == 1){
-            ChangeCurrentPlayer();
-        }
+        ChangeCurrentPlayer();
+    }
+
+    public void GuardTargetCardChosen(int cardValue)
+    {
+        playedCard.GetComponent<Guard>().GuardTargetCardChosen(cardValue, guardTarget);
+        canDeal = true;
     }
 
     private void PlayGuardComputer(Player player)
     {
         guardTarget = player;
         int cardValueGuess = Random.Range(2, 8);
-        GuardTargetCardChosen(cardValueGuess);
+        playedCard.GetComponent<Guard>().GuardTargetCardChosen(cardValueGuess, guardTarget);
+        canDeal = true;
     }
 
     public void GuardTargetChosen(Player player)
@@ -425,67 +383,23 @@ public class GameSession : MonoBehaviour
         DisplayTargetCardButtons();
     }
 
-    public void GuardTargetCardChosen(int cardValue)
-    {
-        if (guardTarget != null && guardTarget.GetCurrentCard().GetValue() == cardValue)
-        {
-            MoveCardToDiscard(guardTarget.GetCurrentCard(), guardTarget);
-            guardTarget.SetActive(false);
-        }
-        DisablePlayerButtons();
-        canDeal = true;
-        if (currentPlayer.GetNumber() == 1){
-            ChangeCurrentPlayer();
-        }
-    }
-
-    public void PriestTargetChosen(Player player)
-    {
-        if (player != null && currentPlayer.GetNumber() == 1)
-        {
-            player.GetCurrentCard().FlipCard();
-            StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
-        } else 
-        {
-            canDeal = true;
-            // ChangeCurrentPlayer();
-        }
-        
-    }
-
-    IEnumerator WaitAndFlip(Card card)
-    {
-        yield return new WaitForSeconds(3);
-        card.FlipCard();
-        DisablePlayerButtons();
-        canDeal = true;
-        ChangeCurrentPlayer();
-    }
-
     public void PlayCard(Card card)
     {
         if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
         {
-            playedCardValue = card.GetValue();
-            switch (card.tag)
+            playedCard = card;
+            switch (card.GetValue())
             {
-                case "Guard":
+                case int n when (n == 1 || n == 2 || n == 3):
                     MoveCardToDiscard(card, currentPlayer);
-                    PlayGuard();
+                    DisplayPlayerButtons();
                     break;
-                case "Priest":
+                case 4:
                     MoveCardToDiscard(card, currentPlayer);
-                    PlayPriest();
+                    currentPlayer.SetInvincible(true);
+                    ChangeCurrentPlayer();
                     break;
-                case "Baron":
-                    MoveCardToDiscard(card, currentPlayer);
-                    PlayBaron();
-                    break;
-                case "Handmaid":
-                    MoveCardToDiscard(card, currentPlayer);
-                    PlayHandmaid();
-                    break;
-                case "Prince":
+                case int n when (n == 5 || n == 6):
                     foreach (Card currentCard in currentPlayer.GetCurrentCards())
                     {
                         if (currentCard.GetValue() == 7)
@@ -494,81 +408,20 @@ public class GameSession : MonoBehaviour
                         }
                     }
                     MoveCardToDiscard(card, currentPlayer);
-                    PlayPrince();
+                    DisplayPlayerButtons();
                     break;
-                case "King":
-                    foreach (Card currentCard in currentPlayer.GetCurrentCards())
-                        {
-                            if (currentCard.GetValue() == 7)
-                            {
-                                return;
-                            }
-                        }
+                case 7:
                     MoveCardToDiscard(card, currentPlayer);
-                    PlayKing();
+                    ChangeCurrentPlayer();
                     break;
-                case "Countess":
+                case 8:
                     MoveCardToDiscard(card, currentPlayer);
-                    PlayCountess();
-                    break;
-                case "Princess":
-                    MoveCardToDiscard(card, currentPlayer);
-                    PlayPrincess();
+                    currentPlayer.SetActive(false);
+                    ChangeCurrentPlayer();
                     break;
                 default:
                     break;
             }
-        }
-    }
-
-    public void PlayGuard()
-    {
-        DisplayPlayerButtons();
-    }
-
-    public void PlayPriest()
-    {
-        DisplayPlayerButtons();
-    }
-
-    public void PlayBaron()
-    {
-        DisplayPlayerButtons();
-    }
-
-    public void PlayHandmaid()
-    {
-        currentPlayer.SetInvincible(true);
-        if (currentPlayer.GetNumber() == 1)
-        {
-            ChangeCurrentPlayer();
-        }
-    }
-
-    public void PlayPrince()
-    {
-        DisplayPlayerButtons();
-    }
-
-    public void PlayKing()
-    {
-        DisplayPlayerButtons();
-    }
-
-    public void PlayCountess()
-    {
-        if (currentPlayer.GetNumber() == 1)
-        {
-            ChangeCurrentPlayer();
-        }
-    }
-
-    public void PlayPrincess()
-    {
-        currentPlayer.SetActive(false);
-        if (currentPlayer.GetNumber() == 1)
-        {
-            ChangeCurrentPlayer();
         }
     }
 
@@ -579,26 +432,27 @@ public class GameSession : MonoBehaviour
         player.AddToPlayedCards(card);
         Vector3 discardPile = player.GetDiscardPile().transform.position;
         Vector3 discardPosition = new Vector3(0, 0, 0);
+        float cardDisplacement = (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5);
+        int zPositionAlteration = player.GetPlayedCardsNumber() - 1;
         if (player.GetPlayedCardsNumber() > 1)
         {
             if (player.GetNumber() == 1)
             {
-                discardPosition = new Vector3(discardPile.x + (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));
+                discardPosition = new Vector3(discardPile.x + cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);
             } else if (player.GetNumber() == 2)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y - (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x, discardPile.y - cardDisplacement, discardPile.z - zPositionAlteration);            
             } else if (player.GetNumber() == 3)
             {
-                discardPosition = new Vector3(discardPile.x - (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.y, discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x - cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);            
             } else if (player.GetNumber() == 4)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y + (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5), discardPile.z - (player.GetPlayedCardsNumber() - 1));            
+                discardPosition = new Vector3(discardPile.x, discardPile.y + cardDisplacement, discardPile.z - zPositionAlteration);            
             }
         } else {
             discardPosition = player.GetDiscardPile().transform.position;
         }
         card.transform.position = discardPosition;
-
         player.PositionSingleCard();
         if (card.GetValue() == 8)
         {
@@ -612,21 +466,13 @@ public class GameSession : MonoBehaviour
 
     public void DealCard()
     {
-        
-        if (canDeal)
+        int previousPlayerNumber = (currentPlayerNumber == 0) ? 3 : currentPlayerNumber - 1;
+        Player previousPlayer = players[previousPlayerNumber];
+        if (currentPlayer.GetCurrentCardsNumber() < 2 && previousPlayer.GetCurrentCardsNumber() < 2 && canDeal)
         {
-
-            int previousPlayerNumber = (currentPlayerNumber == 0) ? 3 : currentPlayerNumber - 1;
-
-            Player previousPlayer = players[previousPlayerNumber];
-
-            if (currentPlayer.GetCurrentCardsNumber() < 2 && previousPlayer.GetCurrentCardsNumber() < 2)
-            {
-                deck.DealCard(currentPlayer);
-            } else {
-
-                return;
-            }
+            deck.DealCard(currentPlayer);
+        } else {
+            return;
         }
     }
 }

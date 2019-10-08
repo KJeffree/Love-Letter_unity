@@ -203,7 +203,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: PrinceTargetChosen
+        m_MethodName: TargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1512267804}
@@ -255,6 +255,49 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4557559546279359302}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &220069536
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 220069538}
+  - component: {fileID: 220069537}
+  m_Layer: 0
+  m_Name: Computer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &220069537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220069536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dfe73a44a19a45ad9ff0d516f4de835, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &220069538
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 220069536}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.08015271, y: -0.17994727, z: -5.1429667}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 14
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &260856636
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +524,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: PrinceTargetChosen
+        m_MethodName: TargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1812363985}
@@ -2328,7 +2371,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: PrinceTargetChosen
+        m_MethodName: TargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1966358754}
@@ -2552,8 +2595,9 @@ MonoBehaviour:
   - {fileID: 1512267804}
   - {fileID: 1966358754}
   currentPlayer: {fileID: 0}
-  playedCardValue: 0
-  princeButtons:
+  canDeal: 1
+  playedCard: {fileID: 0}
+  playerButtons:
   - {fileID: 2014735116}
   - {fileID: 335756348}
   - {fileID: 89393865}
@@ -2792,7 +2836,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1670375415}
-        m_MethodName: PrinceTargetChosen
+        m_MethodName: TargetChosen
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 968120404}
