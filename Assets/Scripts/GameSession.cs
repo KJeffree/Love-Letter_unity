@@ -22,7 +22,6 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] playerButtons;
     [SerializeField] GameObject[] cardValueButtons;
 
-    Card hiddenCard;
     Card hiddenCardVisible;
 
     Player guardTarget;
@@ -42,7 +41,7 @@ public class GameSession : MonoBehaviour
     {
         currentPlayerNumber = 0;
         deck.SetUpDeck();
-        hiddenCard = deck.DealHiddenCard();
+        Card hiddenCard = deck.DealHiddenCard();
         hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
 
         foreach (Player player in players)
@@ -80,6 +79,12 @@ public class GameSession : MonoBehaviour
     {
         return currentPlayer;
     }
+
+    public Card GetHiddenCard()
+    {
+        return hiddenCardVisible;
+    }
+
     public void ChangeCurrentPlayer()
     {
         if (deck.NumberOfCards() == 0)
@@ -234,7 +239,7 @@ public class GameSession : MonoBehaviour
                     {
                         chosenPlayer = currentPlayer;
                     }
-                    PrinceTargetChosen(chosenPlayer);
+                    playedCard.GetComponent<Prince>().PrinceTargetChosen(chosenPlayer);
                     break;
                 case "King":
                     KingTargetChosen(chosenPlayer);
@@ -298,7 +303,7 @@ public class GameSession : MonoBehaviour
                 playedCard.GetComponent<Baron>().BaronTargetChosen(player);
                 break;
             case 5:
-                PrinceTargetChosen(player);
+                playedCard.GetComponent<Prince>().PrinceTargetChosen(player);
                 break;
             case 6:
                 KingTargetChosen(player);
@@ -306,27 +311,6 @@ public class GameSession : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    public void PrinceTargetChosen(Player player)
-    {
-        if (player.GetCurrentCard().GetValue() == 8)
-        {
-            MoveCardToDiscard(player.GetCurrentCard(), player);
-        } else {
-            MoveCardToDiscard(player.GetCurrentCard(), player);
-            if (deck.NumberOfCards() > 0)
-            {
-                deck.DealCard(player);
-            } else
-            {
-                player.AddCard(hiddenCard);
-                Destroy(hiddenCardVisible.gameObject);
-            }
-        }
-        DisablePlayerButtons();
-        canDeal = true;
-        ChangeCurrentPlayer();
     }
 
     public void KingTargetChosen(Player player)
