@@ -22,6 +22,7 @@ public class Priest : MonoBehaviour
         if (player != null && currentPlayer.GetNumber() == 1)
         {
             player.GetCurrentCard().FlipCard();
+            gameSession.DisablePlayerButtons();
             StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
         } else 
         {
@@ -34,7 +35,6 @@ public class Priest : MonoBehaviour
     {
         yield return new WaitForSeconds(3);
         card.FlipCard();
-        gameSession.DisablePlayerButtons();
         gameSession.SetCanDeal(true);
         gameSession.ChangeCurrentPlayer();
     }

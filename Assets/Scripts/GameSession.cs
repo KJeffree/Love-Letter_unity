@@ -11,7 +11,7 @@ public class GameSession : MonoBehaviour
 
     bool gameInPlay = true;
 
-    int currentPlayerNumber = 0;
+    // int currentPlayerNumber = 0;
 
     public Player currentPlayer;
 
@@ -39,7 +39,8 @@ public class GameSession : MonoBehaviour
 
     private void SetUpRound()
     {
-        currentPlayerNumber = 0;
+        // currentPlayerNumber = 0;
+        currentPlayer = players[0];
         deck.SetUpDeck();
         Card hiddenCard = deck.DealHiddenCard();
         hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
@@ -48,7 +49,6 @@ public class GameSession : MonoBehaviour
         {
             deck.DealCard(player);
         }
-        currentPlayer = players[currentPlayerNumber];
         gameInPlay = true;
     }
 
@@ -93,24 +93,17 @@ public class GameSession : MonoBehaviour
             return;
         }
 
-        if (currentPlayerNumber < 3)
-        {
-            currentPlayerNumber++;
-        } else
-        {
-            currentPlayerNumber = 0;
-        }
-        currentPlayer = players[currentPlayerNumber];
-
+        int newIndex = currentPlayer.GetNumber();
+        currentPlayer = currentPlayer.GetNumber() < 4 ? players[newIndex] : players[0];
         currentPlayer.SetInvincible(false);
-        
+
         if (currentPlayer.GetActive() == false)
         {
             ChangeCurrentPlayer();
             return;
         }
 
-        if (currentPlayerNumber != 0)
+        if (currentPlayer.GetNumber() != 1)
         {
             StartCoroutine(ComputerTurn());
         }
@@ -125,6 +118,7 @@ public class GameSession : MonoBehaviour
             if (player.GetActive())
             {
                 activePlayers.Add(player);
+                player.GetCurrentCard().ShowFrontImage();
             }
         }
         if (activePlayers.Count == 1)
@@ -226,7 +220,7 @@ public class GameSession : MonoBehaviour
         switch (chosenCard.tag)
             {
                 case "Guard":
-                    PlayGuardComputer(chosenPlayer);
+                    playedCard.GetComponent<Guard>().PlayGuardComputer(chosenPlayer);
                     break;
                 case "Priest":
                     playedCard.GetComponent<Priest>().PriestTargetChosen(chosenPlayer);
@@ -242,12 +236,11 @@ public class GameSession : MonoBehaviour
                     playedCard.GetComponent<Prince>().PrinceTargetChosen(chosenPlayer);
                     break;
                 case "King":
-                    KingTargetChosen(chosenPlayer);
+                    playedCard.GetComponent<King>().KingTargetChosen(chosenPlayer);
                     break;
                 default:
                     break;
             }
-        // ChangeCurrentPlayer();
     }
 
     private void DisplayPlayerButtons()
@@ -306,38 +299,17 @@ public class GameSession : MonoBehaviour
                 playedCard.GetComponent<Prince>().PrinceTargetChosen(player);
                 break;
             case 6:
-                KingTargetChosen(player);
+                playedCard.GetComponent<King>().KingTargetChosen(player);
                 break;
             default:
                 break;
         }
     }
 
-    public void KingTargetChosen(Player player)
-    {
-        if (player != null)
-        {
-            Card currentPlayerCard = currentPlayer.GetCurrentCard();
-            Card targetPlayerCard = player.GetCurrentCard();
-            currentPlayer.SwapCard(targetPlayerCard);
-            player.SwapCard(currentPlayerCard);
-        }
-        DisablePlayerButtons();
-        canDeal = true;      
-        ChangeCurrentPlayer();
-    }
 
     public void GuardTargetCardChosen(int cardValue)
     {
         playedCard.GetComponent<Guard>().GuardTargetCardChosen(cardValue, guardTarget);
-        canDeal = true;
-    }
-
-    private void PlayGuardComputer(Player player)
-    {
-        guardTarget = player;
-        int cardValueGuess = Random.Range(2, 8);
-        playedCard.GetComponent<Guard>().GuardTargetCardChosen(cardValueGuess, guardTarget);
         canDeal = true;
     }
 
@@ -431,8 +403,8 @@ public class GameSession : MonoBehaviour
 
     public void DealCard()
     {
-        int previousPlayerNumber = (currentPlayerNumber == 0) ? 3 : currentPlayerNumber - 1;
-        Player previousPlayer = players[previousPlayerNumber];
+        int previousPlayerNumber = (currentPlayer.GetNumber() == 1) ? 4 : currentPlayer.GetNumber() - 1;
+        Player previousPlayer = players[previousPlayerNumber - 1];
         if (currentPlayer.GetCurrentCardsNumber() < 2 && previousPlayer.GetCurrentCardsNumber() < 2 && canDeal)
         {
             deck.DealCard(currentPlayer);

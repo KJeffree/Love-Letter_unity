@@ -66,6 +66,14 @@ public class Computer : MonoBehaviour
         {
             chosenCard = card2;
         }
+        else if (card1.GetValue() == 3 && card2.GetValue() < 5)
+        {
+            chosenCard = card2;
+        }
+        else if (card2.GetValue() == 3 && card1.GetValue() < 5)
+        {
+            chosenCard = card1;
+        }
         else if (card1.GetValue() > card2.GetValue())
         {
             chosenCard = card2;

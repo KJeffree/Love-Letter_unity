@@ -27,4 +27,11 @@ public class Guard : MonoBehaviour
         gameSession.DisablePlayerButtons();
         gameSession.ChangeCurrentPlayer();
     }
+
+    public void PlayGuardComputer(Player player)
+    {
+        int cardValueGuess = Random.Range(2, 8);
+        GuardTargetCardChosen(cardValueGuess, player);
+        gameSession.SetCanDeal(true);
+    }
 }

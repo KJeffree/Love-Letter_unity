@@ -49,6 +49,11 @@ public class Card : MonoBehaviour
         return this.front;
     }
 
+    public void ShowFrontImage()
+    {
+        GetComponent<SpriteRenderer>().sprite = front;
+    }
+
     void OnMouseDown()
     {
         if (gameObject.tag == "Deck")
