@@ -18,6 +18,10 @@ public class Priest : MonoBehaviour
     }
     public void PriestTargetChosen(Player player)
     {
+        if (player != null)
+        {
+            gameSession.UpdateGamePlayText("Priest played on Player " + player.GetNumber());
+        }
         Player currentPlayer = gameSession.GetCurrentPlayer();
         if (player != null && currentPlayer.GetNumber() == 1)
         {

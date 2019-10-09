@@ -31,6 +31,8 @@ public class GameSession : MonoBehaviour
 
     SceneLoader sceneLoader;
 
+    List<string> gameMoves = new List<string>();
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,14 +79,13 @@ public class GameSession : MonoBehaviour
 
     public void UpdateGamePlayText(string text)
     {
-        gamePlayText.text = text;
-        StartCoroutine(WaitAndClearText());
-    }
-
-    IEnumerator WaitAndClearText()
-    {
-        yield return new WaitForSeconds(5);
-        gamePlayText.text = "";
+        gameMoves.Add(text);
+        string gameText = "";
+        for (int i = gameMoves.Count - 1; i >= 0; i--)
+        {
+            gameText += gameMoves[i] + "\n";
+        }
+        gamePlayText.text = gameText;
     }
 
     public void SetCanDeal(bool status)
@@ -362,6 +363,7 @@ public class GameSession : MonoBehaviour
                     break;
                 case 4:
                     MoveCardToDiscard(card, currentPlayer);
+                    UpdateGamePlayText("Handmaid played");
                     currentPlayer.SetInvincible(true);
                     ChangeCurrentPlayer();
                     break;
@@ -378,11 +380,13 @@ public class GameSession : MonoBehaviour
                     break;
                 case 7:
                     MoveCardToDiscard(card, currentPlayer);
+                    UpdateGamePlayText("Countess played");
                     ChangeCurrentPlayer();
                     break;
                 case 8:
                     MoveCardToDiscard(card, currentPlayer);
                     currentPlayer.SetActive(false);
+                    UpdateGamePlayText("Princess played");
                     ChangeCurrentPlayer();
                     break;
                 default:

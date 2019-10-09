@@ -21,6 +21,7 @@ public class King : MonoBehaviour
         Player currentPlayer = gameSession.GetCurrentPlayer();
         if (player != null)
         {
+            gameSession.UpdateGamePlayText("King played on Player " + player.GetNumber());
             Card currentPlayerCard = currentPlayer.GetCurrentCard();
             Card targetPlayerCard = player.GetCurrentCard();
             currentPlayer.SwapCard(targetPlayerCard);

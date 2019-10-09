@@ -19,6 +19,11 @@ public class Guard : MonoBehaviour
 
     public void GuardTargetCardChosen(int cardValue, Player target)
     {
+        if (target != null)
+        {
+            string cardName = GetCardName(cardValue);
+            gameSession.UpdateGamePlayText("Guard played on Player " + target.GetNumber() + ", card guessed: " + cardName);
+        }
         if (target != null && target.GetCurrentCard().GetValue() == cardValue)
         {
             gameSession.MoveCardToDiscard(target.GetCurrentCard(), target);
@@ -33,5 +38,28 @@ public class Guard : MonoBehaviour
         int cardValueGuess = Random.Range(2, 8);
         GuardTargetCardChosen(cardValueGuess, player);
         gameSession.SetCanDeal(true);
+    }
+
+    private string GetCardName(int cardValue)
+    {
+        switch (cardValue)
+        {
+            case 2:
+                return "Priest";
+            case 3:
+                return "Baron";
+            case 4:
+                return "Handmaid";
+            case 5:
+                return "Prince";
+            case 6:
+                return "King";
+            case 7:
+                return "Countess";
+            case 8:
+                return "Princess";
+            default:
+                return "";
+        }
     }
 }

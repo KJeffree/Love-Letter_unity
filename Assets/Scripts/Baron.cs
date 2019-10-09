@@ -19,6 +19,10 @@ public class Baron : MonoBehaviour
 
     public void BaronTargetChosen(Player player)
     {
+        if (player != null)
+        {
+            gameSession.UpdateGamePlayText("Baron played on Player " + player.GetNumber());
+        }
         Player currentPlayer = gameSession.GetCurrentPlayer();
         if (player != null)
         {

@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1021989667187824474}
   m_Layer: 0
   m_Name: Baron
-  m_TagString: Deck
+  m_TagString: Baron
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

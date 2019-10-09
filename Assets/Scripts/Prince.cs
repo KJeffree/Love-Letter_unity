@@ -24,6 +24,7 @@ public class Prince : MonoBehaviour
 
     public void PrinceTargetChosen(Player player)
     {
+        gameSession.UpdateGamePlayText("Prince played on Player " + player.GetNumber());
         if (player.GetCurrentCard().GetValue() == 8)
         {
             gameSession.MoveCardToDiscard(player.GetCurrentCard(), player);
