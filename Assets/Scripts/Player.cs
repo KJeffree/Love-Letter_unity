@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
 
     public int playerNumber;
 
+    public TextMeshProUGUI pointsText;
 
     public List<Card> playedCards = new List<Card>();
 
@@ -30,6 +32,11 @@ public class Player : MonoBehaviour
     void Start()
     {
         
+    }
+
+    void Update()
+    {
+        pointsText.text = points.ToString();
     }
 
     public int GetNumber()
@@ -45,6 +52,11 @@ public class Player : MonoBehaviour
     public void SetActive(bool status)
     {
         active = status;
+    }
+
+    public int GetPoints()
+    {
+        return points;
     }
 
     public void AddPoint()
@@ -156,10 +168,5 @@ public class Player : MonoBehaviour
             currentCards[0].transform.position = new Vector3(xPos1, yPos1, transform.position.z);
         }
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
 }

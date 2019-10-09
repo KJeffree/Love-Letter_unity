@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameSession : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class GameSession : MonoBehaviour
 
     bool gameInPlay = true;
 
-    // int currentPlayerNumber = 0;
+    public TextMeshProUGUI gamePlayText;
 
     public Player currentPlayer;
 
@@ -28,13 +29,17 @@ public class GameSession : MonoBehaviour
 
     Computer computer;
 
+    SceneLoader sceneLoader;
+
     // Start is called before the first frame update
     void Start()
     {
         DisablePlayerButtons();
+        sceneLoader = FindObjectOfType<SceneLoader>();
         deck = FindObjectOfType<Deck>();
         SetUpRound();
         computer = FindObjectOfType<Computer>();
+        gamePlayText.text = "";
     }
 
     private void SetUpRound()
@@ -68,6 +73,18 @@ public class GameSession : MonoBehaviour
             StopAllCoroutines();
             GameOver();
         }
+    }
+
+    public void UpdateGamePlayText(string text)
+    {
+        gamePlayText.text = text;
+        StartCoroutine(WaitAndClearText());
+    }
+
+    IEnumerator WaitAndClearText()
+    {
+        yield return new WaitForSeconds(5);
+        gamePlayText.text = "";
     }
 
     public void SetCanDeal(bool status)
@@ -145,6 +162,7 @@ public class GameSession : MonoBehaviour
             if (playersWithHighestValueCard.Count == 1)
             {
                 playersWithHighestValueCard[0].AddPoint();
+                currentPlayer = playersWithHighestValueCard[0];
             } 
             else 
             {
@@ -165,12 +183,23 @@ public class GameSession : MonoBehaviour
                 if (playersWithHighestValueDiscardPile.Count == 1)
                 {
                     playersWithHighestValueDiscardPile[0].AddPoint();
+                    currentPlayer = playersWithHighestValueDiscardPile[0];
                 } else {
                     foreach (Player player in playersWithHighestValueDiscardPile)
                     {
                         player.AddPoint();
+                        currentPlayer = player;
                     }
                 }
+            }
+        }
+
+        foreach (Player player in players)
+        {
+            if (player.GetPoints() == 5)
+            {
+                sceneLoader.LoadGameOverScene();
+                return;
             }
         }
 
