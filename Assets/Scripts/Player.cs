@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        pointsText.text = points.ToString();
+        pointsText.text = "Player " + playerNumber + ": " + points.ToString();
     }
 
     public int GetNumber()

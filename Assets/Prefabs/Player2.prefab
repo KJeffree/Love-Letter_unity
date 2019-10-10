@@ -48,10 +48,12 @@ MonoBehaviour:
   xPos1: -7
   yPos1: -2
   xPos2: -7
-  yPos2: -3
+  yPos2: -2.7
   discardCardPile: {fileID: 6447759512820316767, guid: 88fc2e49db5c84147bb26039875277ef,
     type: 3}
   cardRotation: 270
+  points: 0
   playerNumber: 2
+  pointsText: {fileID: 0}
   playedCards: []
   invincible: 0
