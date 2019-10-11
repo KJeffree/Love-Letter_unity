@@ -10,6 +10,8 @@ public class GameSession : MonoBehaviour
 
     Deck deck;
 
+    public int gameLevel;
+
     bool gameInPlay = true;
 
     public TextMeshProUGUI gamePlayText;
@@ -38,10 +40,18 @@ public class GameSession : MonoBehaviour
     {
         DisablePlayerButtons();
         sceneLoader = FindObjectOfType<SceneLoader>();
+        gameLevel = sceneLoader.GetSelectedLevel();
         deck = FindObjectOfType<Deck>();
         SetUpRound();
         computer = FindObjectOfType<Computer>();
         gamePlayText.text = "";
+    }
+
+    public void SetLevel(int level)
+    {
+        gameLevel = level;
+        Debug.Log("level changed");
+
     }
 
     private void SetUpRound()

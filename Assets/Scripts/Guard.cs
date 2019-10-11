@@ -35,7 +35,7 @@ public class Guard : MonoBehaviour
 
     public void PlayGuardComputer(Player player)
     {
-        int cardValueGuess = Random.Range(2, 8);
+        int cardValueGuess = Random.Range(2, 9);
         GuardTargetCardChosen(cardValueGuess, player);
         gameSession.SetCanDeal(true);
     }
