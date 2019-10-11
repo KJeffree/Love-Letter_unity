@@ -145,12 +145,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SwapCard(Card card)
+    public void SwapCard(Card card, Player otherPlayer)
     {
         currentCards.RemoveAt(0);
         currentCards.Add(card);
-        card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
+        // card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
         card.transform.rotation = Quaternion.Euler(0, 0, cardRotation);
+        StartCoroutine(MoveToPosition(gameObject.GetComponent<Transform>(), otherPlayer.GetComponent<Transform>(), 1, card));
         if (playerNumber == 1)
         {
             card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
@@ -158,6 +159,19 @@ public class Player : MonoBehaviour
         {
             card.GetComponent<SpriteRenderer>().sprite = card.GetBackImage();
 
+        }
+    }
+
+    IEnumerator MoveToPosition(Transform player, Transform otherPlayer, float timeToMove, Card card)
+    {
+        var currentPos = otherPlayer.position;
+        var newPos = player.position;
+        var t = 0f;
+        while(t < 1)
+        {
+            t += Time.deltaTime / timeToMove;
+            card.transform.position = Vector3.Lerp(currentPos, newPos, t);
+            yield return null;
         }
     }
     

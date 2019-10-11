@@ -4061,6 +4061,7 @@ MonoBehaviour:
   - {fileID: 1812363985}
   - {fileID: 1512267804}
   - {fileID: 1966358754}
+  gameLevel: 0
   gamePlayText: {fileID: 653555116}
   currentPlayer: {fileID: 0}
   canDeal: 1
@@ -4999,12 +5000,12 @@ PrefabInstance:
     - target: {fileID: 2018372444196093255, guid: b72662d7634874c6fb7e0a347d6bc479,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -2
       objectReference: {fileID: 0}
     - target: {fileID: 2018372444196093255, guid: b72662d7634874c6fb7e0a347d6bc479,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 3.25
       objectReference: {fileID: 0}
     - target: {fileID: 2018372444196093255, guid: b72662d7634874c6fb7e0a347d6bc479,
         type: 3}
