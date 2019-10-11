@@ -57,6 +57,7 @@ public class GameSession : MonoBehaviour
     private void SetUpRound()
     {
         // currentPlayerNumber = 0;
+        canDeal = true;
         currentPlayer = players[0];
         deck.SetUpDeck();
         Card hiddenCard = deck.DealHiddenCard();
@@ -140,6 +141,7 @@ public class GameSession : MonoBehaviour
     private void GameOver()
     {
         gameInPlay = false;
+        canDeal = false;
         List<Player> activePlayers = new List<Player>();
         foreach (Player player in players)
         {

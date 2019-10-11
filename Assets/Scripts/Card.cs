@@ -67,7 +67,13 @@ public class Card : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-    }
+    // void Update()
+    // {
+    //     if (transform.rotation.y > 0)
+    //     {
+    //         GetComponent<SpriteRenderer>().sprite = back;
+    //     } else {
+
+    //     }
+    // }
 }
