@@ -18,6 +18,8 @@ public class GameSession : MonoBehaviour
 
     public Player currentPlayer;
 
+    public Player lastWinner;
+
     public bool canDeal = true;
 
     public Card playedCard;
@@ -38,6 +40,7 @@ public class GameSession : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        lastWinner = players[0];
         DisablePlayerButtons();
         sceneLoader = FindObjectOfType<SceneLoader>();
         gameLevel = sceneLoader.GetSelectedLevel();
@@ -58,7 +61,7 @@ public class GameSession : MonoBehaviour
     {
         // currentPlayerNumber = 0;
         canDeal = true;
-        currentPlayer = players[0];
+        currentPlayer = lastWinner;
         deck.SetUpDeck();
         Card hiddenCard = deck.DealHiddenCard();
         hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
@@ -68,6 +71,11 @@ public class GameSession : MonoBehaviour
             deck.DealCard(player);
         }
         gameInPlay = true;
+
+        if (currentPlayer.GetNumber() > 1)
+        {
+            StartCoroutine(ComputerTurn());
+        }
     }
 
     // Update is called once per frame
@@ -154,6 +162,7 @@ public class GameSession : MonoBehaviour
         if (activePlayers.Count == 1)
         {
             activePlayers[0].AddPoint();
+            lastWinner = activePlayers[0];
         } 
         else 
         {
@@ -175,7 +184,7 @@ public class GameSession : MonoBehaviour
             if (playersWithHighestValueCard.Count == 1)
             {
                 playersWithHighestValueCard[0].AddPoint();
-                currentPlayer = playersWithHighestValueCard[0];
+                lastWinner = playersWithHighestValueCard[0];
             } 
             else 
             {
@@ -196,12 +205,12 @@ public class GameSession : MonoBehaviour
                 if (playersWithHighestValueDiscardPile.Count == 1)
                 {
                     playersWithHighestValueDiscardPile[0].AddPoint();
-                    currentPlayer = playersWithHighestValueDiscardPile[0];
+                    lastWinner = playersWithHighestValueDiscardPile[0];
                 } else {
                     foreach (Player player in playersWithHighestValueDiscardPile)
                     {
                         player.AddPoint();
-                        currentPlayer = player;
+                        lastWinner = player;
                     }
                 }
             }

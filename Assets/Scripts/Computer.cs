@@ -46,7 +46,7 @@ public class Computer : MonoBehaviour
         {
             chosenPlayer = targets[0];
         } else {
-            int randomIndex = Random.Range(0, targets.Count - 1);
+            int randomIndex = Random.Range(0, targets.Count);
             chosenPlayer = targets[randomIndex];
         }
         return chosenPlayer;
