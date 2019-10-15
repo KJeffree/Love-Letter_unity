@@ -397,32 +397,30 @@ public class GameSession : MonoBehaviour
 
     public void MoveCardToDiscard(Card card, Player player)
     {
-        card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
+        card.ShowFrontImage();
         player.RemoveCard(card);
         player.AddToPlayedCards(card);
         Vector3 discardPile = player.GetDiscardPile().transform.position;
-        Vector3 discardPosition = new Vector3(0, 0, 0);
         float cardDisplacement = (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5);
         int zPositionAlteration = player.GetPlayedCardsNumber() - 1;
         if (player.GetPlayedCardsNumber() > 1)
         {
             if (player.GetNumber() == 1)
             {
-                discardPosition = new Vector3(discardPile.x + cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);
+                card.PositionCard(discardPile.x + cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);
             } else if (player.GetNumber() == 2)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y - cardDisplacement, discardPile.z - zPositionAlteration);            
+                card.PositionCard(discardPile.x, discardPile.y - cardDisplacement, discardPile.z - zPositionAlteration);            
             } else if (player.GetNumber() == 3)
             {
-                discardPosition = new Vector3(discardPile.x - cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);            
+                card.PositionCard(discardPile.x - cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);            
             } else if (player.GetNumber() == 4)
             {
-                discardPosition = new Vector3(discardPile.x, discardPile.y + cardDisplacement, discardPile.z - zPositionAlteration);            
+                card.PositionCard(discardPile.x, discardPile.y + cardDisplacement, discardPile.z - zPositionAlteration);            
             }
         } else {
-            discardPosition = player.GetDiscardPile().transform.position;
+            card.PositionCard(discardPile.x, discardPile.y, discardPile.z);
         }
-        card.transform.position = discardPosition;
         player.PositionSingleCard();
         if (card.GetValue() == 8)
         {

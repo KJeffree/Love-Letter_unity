@@ -54,6 +54,11 @@ public class Card : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = front;
     }
 
+    public void ShowBackImage()
+    {
+        GetComponent<SpriteRenderer>().sprite = back;
+    }
+
     void OnMouseDown()
     {
         if (gameObject.tag == "Deck")
@@ -66,8 +71,7 @@ public class Card : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    public void PositionCard(float xPos, float yPos, float zPoz){
+        transform.position = new Vector3(xPos, yPos, zPoz);
     }
 }
