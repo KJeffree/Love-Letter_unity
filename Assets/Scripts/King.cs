@@ -24,8 +24,8 @@ public class King : MonoBehaviour
             gameSession.UpdateGamePlayText("King played on Player " + player.GetNumber());
             Card currentPlayerCard = currentPlayer.GetCurrentCard();
             Card targetPlayerCard = player.GetCurrentCard();
-            currentPlayer.SwapCard(targetPlayerCard);
-            player.SwapCard(currentPlayerCard);
+            currentPlayer.SwapCard(targetPlayerCard, player);
+            player.SwapCard(currentPlayerCard, currentPlayer);
         }
         gameSession.DisablePlayerButtons();
         gameSession.SetCanDeal(true);      

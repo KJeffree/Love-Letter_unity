@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    private int levelSelected;
     // Start is called before the first frame update
     void Start()
     {
@@ -17,10 +18,30 @@ public class SceneLoader : MonoBehaviour
         
     }
 
-    public void LoadNextScene()
+    private void Awake()
+    {
+        int levelCount = FindObjectsOfType<SceneLoader>().Length;
+        if (levelCount > 1)
+        {
+            gameObject.SetActive(false);
+            Destroy(gameObject);
+        }
+        else 
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    public int GetSelectedLevel()
+    {
+        return levelSelected;
+    }
+
+    public void LoadNextScene(int level)
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex + 1);
+        levelSelected = level;
     }
 
    public void LoadGameOverScene()

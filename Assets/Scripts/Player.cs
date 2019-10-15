@@ -132,6 +132,11 @@ public class Player : MonoBehaviour
         return playedCards.Count;
     }
 
+    public int GetCardRotation()
+    {
+        return cardRotation;
+    }
+
     public void AddCard(Card card)
     {
         card.GetComponent<SpriteRenderer>().sprite = playerNumber == 1 ? card.GetFrontImage() : card.GetBackImage() ;
@@ -145,20 +150,42 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void SwapCard(Card card)
+    public void SwapCard(Card card, Player otherPlayer)
     {
         currentCards.RemoveAt(0);
         currentCards.Add(card);
-        card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
-        card.transform.rotation = Quaternion.Euler(0, 0, cardRotation);
-        if (playerNumber == 1)
-        {
-            card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
-        } else 
-        {
-            card.GetComponent<SpriteRenderer>().sprite = card.GetBackImage();
+        // card.transform.position = new Vector3(xPos1, yPos1, transform.position.z);
+        // card.transform.rotation = Quaternion.Euler(0, 0, cardRotation);
+        StartCoroutine(MoveToPosition(otherPlayer, 1, card));
+        // if (playerNumber == 1)
+        // {
+        //     card.GetComponent<SpriteRenderer>().sprite = card.GetFrontImage();
+        // } else 
+        // {
+        //     card.GetComponent<SpriteRenderer>().sprite = card.GetBackImage();
 
+        // }
+    }
+
+    IEnumerator MoveToPosition(Player otherPlayer, float timeToMove, Card card)
+    {
+        var currentPos = otherPlayer.transform.position;
+        var origRot = card.transform.rotation.eulerAngles;
+        var newPos = gameObject.transform.position;
+        var newRotZ = cardRotation;
+        var newRotation = origRot;
+        var t = 0f;
+        while(t < 1)
+        {
+            t += Time.deltaTime / timeToMove;
+            card.transform.position = Vector3.Lerp(currentPos, newPos, t);
+            card.transform.rotation = Quaternion.Lerp(Quaternion.Euler(origRot), Quaternion.Euler(0, 0, newRotZ), t);
+            yield return null;
         }
+        if (playerNumber == 1 || otherPlayer.GetNumber() == 1)
+            {
+                card.FlipCard();
+            }
     }
     
     public void PositionSingleCard()

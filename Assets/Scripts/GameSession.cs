@@ -10,11 +10,15 @@ public class GameSession : MonoBehaviour
 
     Deck deck;
 
+    public int gameLevel;
+
     bool gameInPlay = true;
 
     public TextMeshProUGUI gamePlayText;
 
     public Player currentPlayer;
+
+    public Player lastWinner;
 
     public bool canDeal = true;
 
@@ -36,18 +40,28 @@ public class GameSession : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        lastWinner = players[0];
         DisablePlayerButtons();
         sceneLoader = FindObjectOfType<SceneLoader>();
+        gameLevel = sceneLoader.GetSelectedLevel();
         deck = FindObjectOfType<Deck>();
         SetUpRound();
         computer = FindObjectOfType<Computer>();
         gamePlayText.text = "";
     }
 
+    public void SetLevel(int level)
+    {
+        gameLevel = level;
+        Debug.Log("level changed");
+
+    }
+
     private void SetUpRound()
     {
         // currentPlayerNumber = 0;
-        currentPlayer = players[0];
+        canDeal = true;
+        currentPlayer = lastWinner;
         deck.SetUpDeck();
         Card hiddenCard = deck.DealHiddenCard();
         hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
@@ -57,6 +71,11 @@ public class GameSession : MonoBehaviour
             deck.DealCard(player);
         }
         gameInPlay = true;
+
+        if (currentPlayer.GetNumber() > 1)
+        {
+            StartCoroutine(ComputerTurn());
+        }
     }
 
     // Update is called once per frame
@@ -130,6 +149,7 @@ public class GameSession : MonoBehaviour
     private void GameOver()
     {
         gameInPlay = false;
+        canDeal = false;
         List<Player> activePlayers = new List<Player>();
         foreach (Player player in players)
         {
@@ -142,6 +162,7 @@ public class GameSession : MonoBehaviour
         if (activePlayers.Count == 1)
         {
             activePlayers[0].AddPoint();
+            lastWinner = activePlayers[0];
         } 
         else 
         {
@@ -163,7 +184,7 @@ public class GameSession : MonoBehaviour
             if (playersWithHighestValueCard.Count == 1)
             {
                 playersWithHighestValueCard[0].AddPoint();
-                currentPlayer = playersWithHighestValueCard[0];
+                lastWinner = playersWithHighestValueCard[0];
             } 
             else 
             {
@@ -184,12 +205,12 @@ public class GameSession : MonoBehaviour
                 if (playersWithHighestValueDiscardPile.Count == 1)
                 {
                     playersWithHighestValueDiscardPile[0].AddPoint();
-                    currentPlayer = playersWithHighestValueDiscardPile[0];
+                    lastWinner = playersWithHighestValueDiscardPile[0];
                 } else {
                     foreach (Player player in playersWithHighestValueDiscardPile)
                     {
                         player.AddPoint();
-                        currentPlayer = player;
+                        lastWinner = player;
                     }
                 }
             }
