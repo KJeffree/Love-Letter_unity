@@ -54,12 +54,10 @@ public class GameSession : MonoBehaviour
     {
         gameLevel = level;
         Debug.Log("level changed");
-
     }
 
     private void SetUpRound()
     {
-        // currentPlayerNumber = 0;
         canDeal = true;
         currentPlayer = lastWinner;
         deck.SetUpDeck();
@@ -156,7 +154,7 @@ public class GameSession : MonoBehaviour
             if (player.GetActive())
             {
                 activePlayers.Add(player);
-                player.GetCurrentCard().ShowFrontImage();
+                player.GetHand().GetCurrentCard().ShowFrontImage();
             }
         }
         if (activePlayers.Count == 1)
@@ -170,12 +168,12 @@ public class GameSession : MonoBehaviour
             int highestCardValue = 0;
             foreach (Player player in activePlayers)
             {
-                if (player.GetCurrentCard().GetValue() > highestCardValue)
+                if (player.GetHand().GetCurrentCard().GetValue() > highestCardValue)
                 {
-                    highestCardValue = player.GetCurrentCard().GetValue();
+                    highestCardValue = player.GetHand().GetCurrentCard().GetValue();
                     playersWithHighestValueCard.Clear();
                     playersWithHighestValueCard.Add(player);
-                } else if (player.GetCurrentCard().GetValue() == highestCardValue)
+                } else if (player.GetHand().GetCurrentCard().GetValue() == highestCardValue)
                 {
                     playersWithHighestValueCard.Add(player);
                 }
@@ -192,12 +190,12 @@ public class GameSession : MonoBehaviour
                 int highestDiscardPileValue = 0;
                 foreach (Player player in playersWithHighestValueCard)
                 {
-                    if (player.TotalValueOfPlayedCards() > highestDiscardPileValue)
+                    if (player.GetHand().GetTotalValueOfPlayedCards() > highestDiscardPileValue)
                     {
-                        highestDiscardPileValue = player.TotalValueOfPlayedCards();
+                        highestDiscardPileValue = player.GetHand().GetTotalValueOfPlayedCards();
                         playersWithHighestValueDiscardPile.Clear();
                         playersWithHighestValueDiscardPile.Add(player);
-                    } else if (player.TotalValueOfPlayedCards() == highestDiscardPileValue)
+                    } else if (player.GetHand().GetTotalValueOfPlayedCards() == highestDiscardPileValue)
                     {
                         playersWithHighestValueDiscardPile.Add(player);
                     }
@@ -373,7 +371,7 @@ public class GameSession : MonoBehaviour
 
     public void PlayCard(Card card)
     {
-        if (currentPlayer.GetCurrentCardsNumber() == 2 && currentPlayer.GetCurrentCards().Contains(card))
+        if (currentPlayer.GetHand().GetCurrentCardsNumber() == 2 && currentPlayer.GetHand().GetCurrentCards().Contains(card))
         {
             playedCard = card;
             switch (card.GetValue())
@@ -389,7 +387,7 @@ public class GameSession : MonoBehaviour
                     ChangeCurrentPlayer();
                     break;
                 case int n when (n == 5 || n == 6):
-                    foreach (Card currentCard in currentPlayer.GetCurrentCards())
+                    foreach (Card currentCard in currentPlayer.GetHand().GetCurrentCards())
                     {
                         if (currentCard.GetValue() == 7)
                         {
@@ -419,12 +417,12 @@ public class GameSession : MonoBehaviour
     public void MoveCardToDiscard(Card card, Player player)
     {
         card.ShowFrontImage();
-        player.RemoveCard(card);
-        player.AddToPlayedCards(card);
-        Vector3 discardPile = player.GetDiscardPile().transform.position;
-        float cardDisplacement = (float)(player.GetPlayedCardsNumber() * 0.5 - 0.5);
-        int zPositionAlteration = player.GetPlayedCardsNumber() - 1;
-        if (player.GetPlayedCardsNumber() > 1)
+        player.GetHand().RemoveCard(card);
+        player.GetHand().AddToPlayedCards(card);
+        Vector3 discardPile = player.GetHand().GetDiscardPile().transform.position;
+        float cardDisplacement = (float)(player.GetHand().GetPlayedCardsNumber() * 0.5 - 0.5);
+        int zPositionAlteration = player.GetHand().GetPlayedCardsNumber() - 1;
+        if (player.GetHand().GetPlayedCardsNumber() > 1)
         {
             if (player.GetNumber() == 1)
             {
@@ -442,13 +440,13 @@ public class GameSession : MonoBehaviour
         } else {
             card.PositionCard(discardPile.x, discardPile.y, discardPile.z);
         }
-        player.PositionSingleCard();
+        player.GetHand().PositionSingleCard();
         if (card.GetValue() == 8)
         {
             player.SetActive(false);
-            if (player.GetCurrentCards().Count > 0)
+            if (player.GetHand().GetCurrentCards().Count > 0)
             {
-                MoveCardToDiscard(player.GetCurrentCard(), player);  
+                MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);  
             }
         }
     }
@@ -456,12 +454,15 @@ public class GameSession : MonoBehaviour
     public void DealCard()
     {
         int previousPlayerNumber = (currentPlayer.GetNumber() == 1) ? 4 : currentPlayer.GetNumber() - 1;
+
         Player previousPlayer = players[previousPlayerNumber - 1];
-        if (currentPlayer.GetCurrentCardsNumber() < 2 && previousPlayer.GetCurrentCardsNumber() < 2 && canDeal)
+        if (currentPlayer.GetHand().GetCurrentCardsNumber() < 2 && previousPlayer.GetHand().GetCurrentCardsNumber() < 2 && canDeal)
         {
             deck.DealCard(currentPlayer);
         } else {
             return;
         }
+
+
     }
 }

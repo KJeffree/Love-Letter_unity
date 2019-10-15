@@ -26,13 +26,13 @@ public class Baron : MonoBehaviour
         Player currentPlayer = gameSession.GetCurrentPlayer();
         if (player != null)
         {
-            if (player.GetCurrentCardValue() > currentPlayer.GetCurrentCardValue())
+            if (player.GetHand().GetCurrentCardValue() > currentPlayer.GetHand().GetCurrentCardValue())
             {
-                gameSession.MoveCardToDiscard(currentPlayer.currentCards[0], currentPlayer);
+                gameSession.MoveCardToDiscard(currentPlayer.GetHand().GetCurrentCards()[0], currentPlayer);
                 currentPlayer.SetActive(false);
-            } else if (player.GetCurrentCardValue() < currentPlayer.GetCurrentCardValue())
+            } else if (player.GetHand().GetCurrentCardValue() < currentPlayer.GetHand().GetCurrentCardValue())
             {
-                gameSession.MoveCardToDiscard(player.currentCards[0], player);
+                gameSession.MoveCardToDiscard(player.GetHand().GetCurrentCards()[0], player);
                 player.SetActive(false);
             }
         }

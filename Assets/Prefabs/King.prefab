@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -1965963021412352285}
   m_Layer: 0
   m_Name: King
-  m_TagString: King
+  m_TagString: Deck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

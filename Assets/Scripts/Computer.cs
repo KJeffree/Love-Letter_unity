@@ -55,8 +55,8 @@ public class Computer : MonoBehaviour
     private Card ChooseCard(Player currentPlayer)
     {
         Card chosenCard = null;
-        Card card1 = currentPlayer.GetCurrentCards()[0];
-        Card card2 = currentPlayer.GetCurrentCards()[1];
+        Card card1 = currentPlayer.GetHand().GetCurrentCards()[0];
+        Card card2 = currentPlayer.GetHand().GetCurrentCards()[1];
 
         if (card1.GetValue() == 7 && card2.GetValue() == 5 || card1.GetValue() == 7 && card2.GetValue() == 6)
         {

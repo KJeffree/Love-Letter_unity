@@ -25,9 +25,9 @@ public class Priest : MonoBehaviour
         Player currentPlayer = gameSession.GetCurrentPlayer();
         if (player != null && currentPlayer.GetNumber() == 1)
         {
-            player.GetCurrentCard().FlipCard();
+            player.GetHand().GetCurrentCard().FlipCard();
             gameSession.DisablePlayerButtons();
-            StartCoroutine(WaitAndFlip(player.GetCurrentCard()));
+            StartCoroutine(WaitAndFlip(player.GetHand().GetCurrentCard()));
         } else 
         {
             gameSession.SetCanDeal(true);

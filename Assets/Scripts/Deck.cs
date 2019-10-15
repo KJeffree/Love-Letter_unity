@@ -24,6 +24,7 @@ public class Deck : MonoBehaviour
         PopulateDeck();
         Shuffle(deck);
         DisplayCardDeck(deck);
+
     }
 
     void PopulateDeck()

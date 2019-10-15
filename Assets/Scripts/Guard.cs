@@ -24,9 +24,9 @@ public class Guard : MonoBehaviour
             string cardName = GetCardName(cardValue);
             gameSession.UpdateGamePlayText("Guard played on Player " + target.GetNumber() + ", card guessed: " + cardName);
         }
-        if (target != null && target.GetCurrentCard().GetValue() == cardValue)
+        if (target != null && target.GetHand().GetCurrentCard().GetValue() == cardValue)
         {
-            gameSession.MoveCardToDiscard(target.GetCurrentCard(), target);
+            gameSession.MoveCardToDiscard(target.GetHand().GetCurrentCard(), target);
             target.SetActive(false);
         }
         gameSession.DisablePlayerButtons();

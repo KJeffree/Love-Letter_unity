@@ -23,6 +23,11 @@ public class Card : MonoBehaviour
         return value;
     }
 
+    public void SetTag(string tag)
+    {
+        gameObject.tag = tag;
+    }
+
     public void FlipCard()
     {
         if (GetComponent<SpriteRenderer>().sprite == front)

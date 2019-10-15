@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7039338344904517629}
   - component: {fileID: 2242367804334278571}
+  - component: {fileID: 418513377849296671}
   m_Layer: 0
   m_Name: Player1
   m_TagString: Untagged
@@ -43,8 +44,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad920b7e3bd148a1a4938df7749fedd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentCards: []
+  hand: {fileID: 418513377849296671}
   active: 1
+  points: 0
+  playerNumber: 1
+  pointsText: {fileID: 0}
+  invincible: 0
+--- !u!114 &418513377849296671
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7559644385526654764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e4101b4f3744c81baa40053b03db02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   xPos1: 2
   yPos1: -3.25
   xPos2: 2.7
@@ -52,8 +69,3 @@ MonoBehaviour:
   discardCardPile: {fileID: 4557559546222773250, guid: ed0d384dcabfa474488b1d946f3e5670,
     type: 3}
   cardRotation: 0
-  points: 0
-  playerNumber: 1
-  pointsText: {fileID: 0}
-  playedCards: []
-  invincible: 0

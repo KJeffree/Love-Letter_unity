@@ -25,11 +25,11 @@ public class Prince : MonoBehaviour
     public void PrinceTargetChosen(Player player)
     {
         gameSession.UpdateGamePlayText("Prince played on Player " + player.GetNumber());
-        if (player.GetCurrentCard().GetValue() == 8)
+        if (player.GetHand().GetCurrentCard().GetValue() == 8)
         {
-            gameSession.MoveCardToDiscard(player.GetCurrentCard(), player);
+            gameSession.MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);
         } else {
-            gameSession.MoveCardToDiscard(player.GetCurrentCard(), player);
+            gameSession.MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);
             if (deck.NumberOfCards() > 0)
             {
                 deck.DealCard(player);
