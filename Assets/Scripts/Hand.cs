@@ -121,5 +121,43 @@ public class Hand : MonoBehaviour
             currentCards[0].transform.position = new Vector3(xPos1, yPos1, transform.position.z);
         }
     }
+
+    public void MoveCardToDiscard(Card card)
+    {
+        Player player = GetComponentInParent<Player>();
+        card.ShowFrontImage();
+        RemoveCard(card);
+        AddToPlayedCards(card);
+        Vector3 discardPile = discardCardPile.transform.position;
+        float cardDisplacement = (float)(GetPlayedCardsNumber() * 0.5 - 0.5);
+        int zPositionAlteration = GetPlayedCardsNumber() - 1;
+        discardPile.z -= zPositionAlteration;
+        if (GetPlayedCardsNumber() > 1)
+        {
+            if (player.GetNumber() == 1)
+            {
+                discardPile.x += cardDisplacement;
+            } else if (player.GetNumber() == 2)
+            {
+                discardPile.y -= cardDisplacement;
+            } else if (player.GetNumber() == 3)
+            {
+                discardPile.x -= cardDisplacement;
+            } else if (player.GetNumber() == 4)
+            {
+                discardPile.y += cardDisplacement;
+            }
+        }
+        card.MoveCard(discardPile, cardRotation, 0.1f);
+        PositionSingleCard();
+        if (card.GetValue() == 8)
+        {
+            player.SetActive(false);
+            if (player.GetHand().GetCurrentCards().Count > 0)
+            {
+                MoveCardToDiscard(player.GetHand().GetCurrentCard());  
+            }
+        }
+    }
     
 }

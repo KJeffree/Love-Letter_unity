@@ -27,9 +27,9 @@ public class Prince : MonoBehaviour
         gameSession.UpdateGamePlayText("Prince played on Player " + player.GetNumber());
         if (player.GetHand().GetCurrentCard().GetValue() == 8)
         {
-            gameSession.MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);
+            player.GetHand().MoveCardToDiscard(player.GetHand().GetCurrentCard());
         } else {
-            gameSession.MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);
+            player.GetHand().MoveCardToDiscard(player.GetHand().GetCurrentCard());
             if (deck.NumberOfCards() > 0)
             {
                 deck.DealCard(player);

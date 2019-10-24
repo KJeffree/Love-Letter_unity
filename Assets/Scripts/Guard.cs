@@ -26,7 +26,7 @@ public class Guard : MonoBehaviour
         }
         if (target != null && target.GetHand().GetCurrentCard().GetValue() == cardValue)
         {
-            gameSession.MoveCardToDiscard(target.GetHand().GetCurrentCard(), target);
+            target.GetHand().MoveCardToDiscard(target.GetHand().GetCurrentCard());
             target.SetActive(false);
         }
         gameSession.DisablePlayerButtons();
