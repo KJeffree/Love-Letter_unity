@@ -8,18 +8,11 @@ public class Prince : MonoBehaviour
     Deck deck;
     Card hiddenCard;
 
-    // Start is called before the first frame update
     void Start()
     {
         gameSession = FindObjectOfType<GameSession>();
         deck = FindObjectOfType<Deck>();
         hiddenCard = gameSession.GetHiddenCard();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void PrinceTargetChosen(Player player)

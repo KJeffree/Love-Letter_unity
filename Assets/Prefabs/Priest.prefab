@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: -4523264346332298017}
   m_Layer: 0
   m_Name: Priest
-  m_TagString: Priest
+  m_TagString: Deck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

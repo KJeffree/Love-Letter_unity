@@ -36,7 +36,6 @@ public class GameSession : MonoBehaviour
 
     List<string> gameMoves = new List<string>();
 
-    // Start is called before the first frame update
     void Start()
     {
         lastWinner = players[0];
@@ -74,7 +73,6 @@ public class GameSession : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         List<Player> activePlayers = new List<Player>();
@@ -420,43 +418,6 @@ public class GameSession : MonoBehaviour
             }
         }
     }
-
-    // public void MoveCardToDiscard(Card card, Player player)
-    // {
-    //     card.ShowFrontImage();
-    //     player.GetHand().RemoveCard(card);
-    //     player.GetHand().AddToPlayedCards(card);
-    //     Vector3 discardPile = player.GetHand().GetDiscardPile().transform.position;
-    //     float cardDisplacement = (float)(player.GetHand().GetPlayedCardsNumber() * 0.5 - 0.5);
-    //     int zPositionAlteration = player.GetHand().GetPlayedCardsNumber() - 1;
-    //     if (player.GetHand().GetPlayedCardsNumber() > 1)
-    //     {
-    //         if (player.GetNumber() == 1)
-    //         {
-    //             card.PositionCard(discardPile.x + cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);
-    //         } else if (player.GetNumber() == 2)
-    //         {
-    //             card.PositionCard(discardPile.x, discardPile.y - cardDisplacement, discardPile.z - zPositionAlteration);            
-    //         } else if (player.GetNumber() == 3)
-    //         {
-    //             card.PositionCard(discardPile.x - cardDisplacement, discardPile.y, discardPile.z - zPositionAlteration);            
-    //         } else if (player.GetNumber() == 4)
-    //         {
-    //             card.PositionCard(discardPile.x, discardPile.y + cardDisplacement, discardPile.z - zPositionAlteration);            
-    //         }
-    //     } else {
-    //         card.PositionCard(discardPile.x, discardPile.y, discardPile.z);
-    //     }
-    //     player.GetHand().PositionSingleCard();
-    //     if (card.GetValue() == 8)
-    //     {
-    //         player.SetActive(false);
-    //         if (player.GetHand().GetCurrentCards().Count > 0)
-    //         {
-    //             MoveCardToDiscard(player.GetHand().GetCurrentCard(), player);  
-    //         }
-    //     }
-    // }
 
     public void DealCard()
     {

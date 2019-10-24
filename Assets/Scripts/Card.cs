@@ -12,7 +12,6 @@ public class Card : MonoBehaviour
     [SerializeField] Sprite front;
 
     [SerializeField] Sprite back;
-    // Start is called before the first frame update
     void Start()
     {
         gameSession = FindObjectOfType<GameSession>();

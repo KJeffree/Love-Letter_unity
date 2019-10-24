@@ -13,12 +13,6 @@ public class Deck : MonoBehaviour
 
     int cardsDealt = 0;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     public void SetUpDeck()
     {
         PopulateDeck();
@@ -97,9 +91,4 @@ public class Deck : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

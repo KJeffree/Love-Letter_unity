@@ -4,6 +4,15 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - Deck
+  - Baron(Clone)
+  - Countess(Clone)
+  - Guard(Clone)
+  - Handmaid(Clone)
+  - King(Clone)
+  - Priest(Clone)
+  - Prince(Clone)
+  - Princess(Clone)
   - Baron
   - Countess
   - Guard
@@ -12,7 +21,6 @@ TagManager:
   - Priest
   - Prince
   - Princess
-  - Deck
   layers:
   - Default
   - TransparentFX

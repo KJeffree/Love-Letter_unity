@@ -5,17 +5,11 @@ using UnityEngine;
 public class King : MonoBehaviour
 {
     GameSession gameSession;
-    // Start is called before the first frame update
     void Start()
     {
         gameSession = FindObjectOfType<GameSession>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void KingTargetChosen(Player player)
     {
         Player currentPlayer = gameSession.GetCurrentPlayer();

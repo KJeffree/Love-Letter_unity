@@ -9,31 +9,14 @@ public class Player : MonoBehaviour
 
     public bool active = true;
 
-    // public float xPos1;
-    // public float yPos1;
-
-    // public float xPos2;
-    // public float yPos2;
-
-    // public GameObject discardCardPile;
-
-    // public int cardRotation;
-
     public int points;
 
     public int playerNumber;
 
     public TextMeshProUGUI pointsText;
 
-    // public List<Card> playedCards = new List<Card>();
-    //     public List<Card> currentCards = new List<Card>();
-
-
     public bool invincible = false;
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
+ 
 
     void Update()
     {

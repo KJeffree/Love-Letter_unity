@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3753790241913814233}
   m_Layer: 0
   m_Name: Handmaid
-  m_TagString: Handmaid
+  m_TagString: Deck
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
