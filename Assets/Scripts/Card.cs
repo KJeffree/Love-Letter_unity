@@ -79,4 +79,29 @@ public class Card : MonoBehaviour
     public void PositionCard(float xPos, float yPos, float zPoz){
         transform.position = new Vector3(xPos, yPos, zPoz);
     }
+
+    public void MoveCard(Vector3 newPos, int newRot, float timeToMove)
+    {
+        StartCoroutine(MoveToPosition(newPos, newRot, timeToMove));
+    }
+
+    IEnumerator MoveToPosition(Vector3 newPos, int newRot, float timeToMove)
+    {
+        Vector3 currentPos = gameObject.transform.position;
+        Vector3 origRot = gameObject.transform.rotation.eulerAngles;
+        var t = 0f;
+
+        while(t < 1)
+        {
+            t += Time.deltaTime / timeToMove;
+            gameObject.transform.position = Vector3.Lerp(currentPos, newPos, t);
+            gameObject.transform.rotation = Quaternion.Lerp(Quaternion.Euler(origRot), Quaternion.Euler(0, 0, newRot), t);
+            yield return null;
+        }
+    }
+
+    // public void MoveCardToDiscard()
+    // {
+
+    // }
 }

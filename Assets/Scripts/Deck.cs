@@ -90,13 +90,11 @@ public class Deck : MonoBehaviour
 
     public void DealCard(Player player)
     {
-        Card lastCard = deck[deck.Count-1];
         Card card = visibleDeck[cardsDealt];
-        Debug.Log(card);
-        Destroy(card.gameObject);
-        player.AddCard(lastCard);
+        player.AddCard(card);
         deck.RemoveAt(deck.Count-1);
         cardsDealt++;
+
     }
 
     // Update is called once per frame

@@ -17,7 +17,6 @@ public class GameSession : MonoBehaviour
     public TextMeshProUGUI gamePlayText;
 
     public Player currentPlayer;
-
     public Player lastWinner;
 
     public bool canDeal = true;
@@ -27,7 +26,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] playerButtons;
     [SerializeField] GameObject[] cardValueButtons;
 
-    Card hiddenCardVisible;
+    Card hiddenCard;
 
     Player guardTarget;
 
@@ -53,7 +52,6 @@ public class GameSession : MonoBehaviour
     public void SetLevel(int level)
     {
         gameLevel = level;
-        Debug.Log("level changed");
     }
 
     private void SetUpRound()
@@ -62,7 +60,7 @@ public class GameSession : MonoBehaviour
         currentPlayer = lastWinner;
         deck.SetUpDeck();
         Card hiddenCard = deck.DealHiddenCard();
-        hiddenCardVisible = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
+        hiddenCard = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
 
         foreach (Player player in players)
         {
@@ -90,8 +88,16 @@ public class GameSession : MonoBehaviour
         if (activePlayers.Count == 1 && gameInPlay)
         {
             StopAllCoroutines();
-            GameOver();
+            StartCoroutine(WaitAndEndGame());
+            gameInPlay = false;
         }
+    }
+
+    IEnumerator WaitAndEndGame()
+    {
+        yield return new WaitForSeconds(1.5f);
+        GameOver();
+
     }
 
     public void UpdateGamePlayText(string text)
@@ -117,11 +123,12 @@ public class GameSession : MonoBehaviour
 
     public Card GetHiddenCard()
     {
-        return hiddenCardVisible;
+        return hiddenCard;
     }
 
     public void ChangeCurrentPlayer()
     {
+        Debug.Log("Change Current Player Called");
         if (deck.NumberOfCards() == 0)
         {
             GameOver();
@@ -216,7 +223,7 @@ public class GameSession : MonoBehaviour
 
         foreach (Player player in players)
         {
-            if (player.GetPoints() == 5)
+            if (player.GetPoints() == 4)
             {
                 sceneLoader.LoadGameOverScene();
                 return;
@@ -462,7 +469,5 @@ public class GameSession : MonoBehaviour
         } else {
             return;
         }
-
-
     }
 }

@@ -96,17 +96,22 @@ public class Hand : MonoBehaviour
     {
         if (currentCards.Count == 0)
         {
-            currentCards.Add(Instantiate(card, new Vector3(xPos1, yPos1, transform.position.z), Quaternion.Euler(0, 0, cardRotation)));
+            currentCards.Add(card);
+            Vector3 newPos = new Vector3(xPos1, yPos1, transform.position.z);
+            card.MoveCard(newPos, cardRotation, 0.5f);
         } else
         {
-            currentCards.Add(Instantiate(card, new Vector3(xPos2, yPos2, transform.position.z - 1), Quaternion.Euler(0, 0, cardRotation)));
+            currentCards.Add(card);
+            Vector3 newPos = new Vector3(xPos2, yPos2, transform.position.z - 1);
+            card.MoveCard(newPos, cardRotation, 0.5f);
         }
     }
 
-    public void SwapCard(Card card, Player otherPlayer)
+    public void SwapCard(Card card, Player currentPlayer)
     {
         currentCards.RemoveAt(0);
         currentCards.Add(card);
+        card.MoveCard(currentPlayer.transform.position, cardRotation, 1);
     }
 
     public void PositionSingleCard()

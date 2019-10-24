@@ -95,35 +95,18 @@ public class Player : MonoBehaviour
         {
             card.ShowBackImage();
         }
-        card.SetTag(card.gameObject.transform.name);
+        string name = card.gameObject.transform.name;
+        card.SetTag(name.Substring(0, name.Length-7));
         hand.AddCard(card);
     }
 
     public void SwapCard(Card card, Player otherPlayer)
     {
-        hand.SwapCard(card, otherPlayer);
-        StartCoroutine(MoveToPosition(otherPlayer, 1, card));
+        hand.SwapCard(card, this);
+        if (playerNumber == 1 || otherPlayer.GetNumber() == 1)
+        {
+            card.FlipCard();
+        }
     }
 
-    IEnumerator MoveToPosition(Player otherPlayer, float timeToMove, Card card)
-    {
-        var currentPos = otherPlayer.transform.position;
-        var origRot = card.transform.rotation.eulerAngles;
-        var newPos = gameObject.transform.position;
-        var newRotZ = hand.GetCardRotation();
-        var newRotation = origRot;
-        var t = 0f;
-        while(t < 1)
-        {
-            t += Time.deltaTime / timeToMove;
-            card.transform.position = Vector3.Lerp(currentPos, newPos, t);
-            card.transform.rotation = Quaternion.Lerp(Quaternion.Euler(origRot), Quaternion.Euler(0, 0, newRotZ), t);
-            yield return null;
-        }
-        if (playerNumber == 1 || otherPlayer.GetNumber() == 1)
-            {
-                card.FlipCard();
-            }
-    }
-    
 }
