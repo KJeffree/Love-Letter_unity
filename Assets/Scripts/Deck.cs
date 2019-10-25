@@ -74,12 +74,12 @@ public class Deck : MonoBehaviour
 
     public Card DealHiddenCard()
     {
-        Card lastCard = deck[deck.Count-1];
+        Vector3 newPos = new Vector3(1.5f, 0, -1);
         Card card = visibleDeck[cardsDealt];
-        Destroy(card.gameObject);
+        card.MoveCard(newPos, 0, 0.5f);
         deck.RemoveAt(deck.Count-1);
         cardsDealt++;
-        return lastCard;
+        return card;
     }
 
     public void DealCard(Player player)

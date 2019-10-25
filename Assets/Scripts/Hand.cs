@@ -19,7 +19,6 @@ public class Hand : MonoBehaviour
 
     public int cardRotation;
 
-
     public void ClearCards()
     {
         currentCards.Clear();

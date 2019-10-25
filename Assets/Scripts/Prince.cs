@@ -29,7 +29,6 @@ public class Prince : MonoBehaviour
             } else
             {
                 player.AddCard(hiddenCard);
-                Destroy(hiddenCard.gameObject);
             }
         }
         gameSession.DisablePlayerButtons();

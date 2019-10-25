@@ -26,7 +26,7 @@ public class GameSession : MonoBehaviour
     [SerializeField] GameObject[] playerButtons;
     [SerializeField] GameObject[] cardValueButtons;
 
-    Card hiddenCard;
+    public Card hiddenCard;
 
     Player guardTarget;
 
@@ -58,8 +58,7 @@ public class GameSession : MonoBehaviour
         canDeal = true;
         currentPlayer = lastWinner;
         deck.SetUpDeck();
-        Card hiddenCard = deck.DealHiddenCard();
-        hiddenCard = Instantiate(hiddenCard, new Vector3(1.5f, 0, -1), Quaternion.Euler(0, 0, 0));
+        hiddenCard = deck.DealHiddenCard();
 
         foreach (Player player in players)
         {
