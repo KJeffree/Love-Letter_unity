@@ -125,7 +125,6 @@ public class GameSession : MonoBehaviour
 
     public void ChangeCurrentPlayer()
     {
-        Debug.Log("Change Current Player Called");
         if (deck.NumberOfCards() == 0)
         {
             GameOver();
@@ -249,7 +248,6 @@ public class GameSession : MonoBehaviour
     IEnumerator ComputerTurn()
     {
         yield return new WaitForSeconds(1);
-        List<Player> availableTargets = AvailableTargets();
         computer.TakeTurn(currentPlayer, AvailableTargets());
     }
 
