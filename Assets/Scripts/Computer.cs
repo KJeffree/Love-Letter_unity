@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Computer : MonoBehaviour
 {
+
     GameSession gameSession;
     void Start()
     {
