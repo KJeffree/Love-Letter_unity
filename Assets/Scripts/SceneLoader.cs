@@ -43,4 +43,9 @@ public class SceneLoader : MonoBehaviour
         yield return new WaitForSeconds(3);
         SceneManager.LoadScene(2);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }
