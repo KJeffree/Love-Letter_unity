@@ -21,6 +21,13 @@ public class SceneLoader : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape)){
+            QuitGame();
+        }
+    }
+
     public int GetSelectedLevel()
     {
         return levelSelected;
