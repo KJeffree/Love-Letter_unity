@@ -17,4 +17,4 @@ I created this game using Unity and C#. Love Letter is a card game with 16 cards
 - The moves each player makes is recorded in a text box at the bottom of the screen.
 
 #### To play:
-Clone this repository, and open 'Standalone Build'. Select 'Windowed' and click Play! Resize the window as needed.
+Clone this repository, and open 'Standalone Build'. To quit the application, press the escape button.
